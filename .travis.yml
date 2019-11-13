@@ -1,6 +1,10 @@
 language: python
 python: 
-    - "3.7"
+    - "3.6.8"
+env:
+    - DEVELOPMENT=true
+    - HOSTNAME='0.0.0.0'
+    - IP='0.0.0.0'
 install: "pip3 install -r requirements.txt"
 script:
     - SECRET_KEY="whatever" ./manage.py test
