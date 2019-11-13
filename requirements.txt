@@ -42,7 +42,7 @@ olefile==0.45.1
 PAM==0.4.2
 parso==0.1.1
 pbr==5.4.3
-Pillow==5.1.0
+Pillow==6.2.0
 pyasn1==0.4.7
 pyasn1-modules==0.2.1
 pycrypto==2.6.1
