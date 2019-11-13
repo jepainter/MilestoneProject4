@@ -1,6 +1,6 @@
 Django~=1.11.24
 Pillow>=6.2.0
-chardet~=2.2.1
+chardet>=3.0.2
 colorama~=0.2.5
 docutils~=0.14
 html5lib~=0.999
@@ -10,6 +10,6 @@ pycurl~=7.19.3
 python-dateutil~=2.6.1
 pytz~=2017.2
 requests~=2.20
-six~=1.5.2
+six>=1.10.0
 urllib3~=1.23
 wheel~=0.24.0
