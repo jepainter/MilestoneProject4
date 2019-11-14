@@ -123,3 +123,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
+# Message storage for feedback to the user
+MESSAGE_STORAGE ="django.contrib.messages.storage.session.SessionStorage"

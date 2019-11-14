@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Artifact Hunters - Accounts index</title>
+    <title>Artifact Hunters</title>
 </head>
 <body>
     <h2>This is the accounts index</h2>
@@ -12,9 +12,17 @@
         <ul>
             <li><a href="#">Login</a></li>
             <li><a href="#">Register</a></li>
-            <li><a href="#">Logout</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
             <li><a href="#">Profile</a></li>
         </ul>
+        <hr>
+        {% if messages %}
+        <div>
+            {% for message in messages %}
+            {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
     </nav>
 </body>
 </html>
