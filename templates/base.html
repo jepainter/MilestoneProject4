@@ -1,0 +1,44 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <!-- Style sheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.3.1/spacelab/bootstrap.min.css" integrity="sha256-iQE5ZOW7wyI/QCpgBU4gGoBHmb+8srKJjr3e8K0nBx8=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="{ static 'css/style.css' }" type="text/css" />    
+    
+    <title>{% block page_title %}{% endblock %}</title>
+</head>
+<body>
+    <!-- Navigation section -->
+    <nav>
+        <ul>
+            {% if user.is_authenticated %}
+                <li><a href="#">Profile</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            {% else %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="#">Register</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <!-- Content section -->
+    <h1>{% block page_heading %}{% endblock %}</h1>
+    <hr>
+        {% if messages %}
+        <div>
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
+    <hr>
+    {% block content %}
+    {% endblock %}
+    <!-- Footer section -->
+    <h1>Footer goes here</h1>
+</body>
+</html>
