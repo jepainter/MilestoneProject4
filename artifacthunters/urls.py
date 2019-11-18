@@ -15,14 +15,18 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from accounts.views import index, logout, login, registration, user_profile
+from django.views import static
+from artifacthunters.settings import MEDIA_ROOT
+from accounts.views import index
+from accounts import urls as accounts_urls
+from artifacts.views import all_artifacts
+from artifacts import urls as artifacts_urls
 
-#URL's for rendering views
+# URL's for rendering views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', index, name="index"),
-    url(r'^accounts/logout/$', logout, name="logout"),
-    url(r'^accounts/login/$', login, name="login"),
-    url(r'^accounts/register/$', registration, name="register"),
-    url(r'^accounts/profile/$', user_profile, name="profile"),
+    url(r'^accounts/', include(accounts_urls)),
+    url(r'^artifacts/', include(artifacts_urls)),
+    url(r'^media/(?P<path>.*)$', static.serve, {"document_root": MEDIA_ROOT}),
 ]

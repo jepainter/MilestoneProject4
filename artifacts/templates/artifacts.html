@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block page_title %}AH: Artifacts{% endblock %}
+{% block page_heading %}Artifacts{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-around">
+    {% for artifact in artifacts %}
+        <div class="col-xs-10 col-sm-6 col-md-4 col-lg-3 display panel panel-default">
+            <div class="panel-body">
+                <div class="artifact" style="background-image: url('{{ MEDIA_URL }}{{ artifact.image }}')"></div>
+                <h3>{{ artifact.name }}</h3>
+                <p class="artifact-description">Description: {{ artifact.description }}</p>
+                <p>Reserve Price: {{ artifact.reserve_price }}</p>
+                <p>Purchase Price: {{ artifact.purchase_price }}</p>
+                
+                <h4>Place a bid:</h4>
+                <form action="#"method="POST">
+                    {% csrf_token %}
+                    <input name="quantity" type="number" min="1" max="{{ artifact.quantity }}" class="form-control" placeholder="How many do you want...">
+                    <input name="amount" type="number" min="{{ artifact.reserve_price }}" class="form-control" placeholder="What do you want to bid...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-success" type="submit">Add bid</button>
+                    </span>
+                </form>
+                <h4>Purchase artifact:</h4>
+                <form action="#"method="POST">
+                    {% csrf_token %}
+                    <input name="quantity" type="number" min="1" max="{{ artifact.quantity }}" class="form-control" placeholder="How many do you want...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-success" type="submit">Add to cart</button>
+                    </span>
+                </form>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
