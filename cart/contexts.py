@@ -21,4 +21,8 @@ def cart_contents(request):
             "artifact": artifact
         })
         
-        return {"cart_items": cart_items, "total": total, "artifact_count": artifact_count}
+    return {
+        "cart_items": cart_items,
+        "total": total,
+        "artifact_count": artifact_count
+        }
