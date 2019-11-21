@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% block page_title %}AH: Cart{% endblock %}
+{% block page_heading %}Cart{% endblock %}
+
+{% block content %}
+<div class="row justify-content-around no-gutters">
+    {% for item in cart_items %}
+    <div class="card col-xs-10 col-sm-6 col-md-4 col-lg-3">
+            <img class="card-img-top artifact" src="url('{{ MEDIA_URL }}{{ item.artifact.image }}')" alt="{{ item.artifact.name }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ item.artifact.name }}</h5>
+                <p class="card-text">Description: {{ item.artifact.description }}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Purchase Price: {{ item.artifact.purchase_price }}</li>
+                <li class="list-group-item">
+                    <h6>Purchase artifact:</h6>
+                    <form action="{% url 'adjust_cart' item.id %}" method="POST">
+                        {% csrf_token %}
+                        <input name="quantity" type="number" min="0" max="{{ item.artifact.quantity }}" class="form-control" placeholder="{{ item.quantity }}">
+                        <span class="input-group-btn">
+                            <button class="btn btn-success" type="submit">Adjust quantity</button>
+                        </span>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    {% endfor %}
+</div>
+<div class="row justify-content-around no-gutters">
+    <h5>Total:</h5>
+    <h6>{{ total }}</h6>
+</div>
+{% endblock %}
