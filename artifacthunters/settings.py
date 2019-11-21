@@ -132,5 +132,9 @@ STATICFILES_DIRS = (
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
+# Stripe key access
+STRIPE_PUBLISHABLE = os.environ.get("STRIPE_PUBLISHABLE")
+STRIPE_SECRET = os.environ.get("STRIPE_SECRET")
+
 # Message storage for feedback to the user
 MESSAGE_STORAGE ="django.contrib.messages.storage.session.SessionStorage"
