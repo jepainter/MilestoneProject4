@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block head_js %}
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+<script type="text/javascript">
+    //<![CDATA[
+    Stripe.publishableKey = '{{ publishable }}';
+    //]}>
+</script>
+<script type="text/javascript" src="{% static 'js/stripe.js' %}"></script>
+{% endblock %}
+
+{% block page_title %}AH: Payment{% endblock %}
+{% block page_heading %}Payment{% endblock %}
+
+{% block content %}
+<div class="row justify-content-around no-gutters">
+    {% for item in cart_items %}
+    <div class="card col-xs-10 col-sm-6 col-md-4 col-lg-3">
+            <div class="card-img-top artifact" style="background-image: url('{{ MEDIA_URL }}{{ item.artifact.image }}')" alt="{{ item.artifact.name }}"></div>
+            <div class="card-body">
+                <h5 class="card-title">{{ item.artifact.name }}</h5>
+                <p class="card-text">Description: {{ item.artifact.description }}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Purchase Price: {{ item.artifact.purchase_price }}</li>
+            </ul>
+        </div>
+    {% endfor %}
+</div>
+<div class="row">
+    <p>Total:</p>
+    <p>{{ total }}</p>
+</div>
+
+<form role="form" method="post" id="payment-form" action="{% url 'payment' %}">
+    <legend>Checkout</legend>
+
+    <div id="credit-card-errors" style="display: none;">
+        <div id="alert-message block-message error" id="stripe-error-message"></div>
+    </div>
+
+    <div class="form-group col-md-6">
+        <h5>Delivery details:</h5>
+        {{ order_form }}
+    </div>
+
+    <div class="form-group col-md-6">
+        <h5>Payment details:</h5>
+        {{ payment_form }}
+    </div>
+
+    {% csrf_token %}
+    <div class="form-group col-md-12">
+        <input class=" btn btn-primary" id="submit_payment_btn" name="commit" type="submit" value="Submit Payment">
+    </div>
+</form>
+{% endblock %}
