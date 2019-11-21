@@ -22,6 +22,7 @@ from accounts import urls as accounts_urls
 from artifacts.views import all_artifacts
 from artifacts import urls as artifacts_urls
 from cart import urls as cart_urls
+from search import urls as search_urls
 
 # URL's for rendering views
 urlpatterns = [
@@ -31,4 +32,5 @@ urlpatterns = [
     url(r'^artifacts/', include(artifacts_urls)),
     url(r'^media/(?P<path>.*)$', static.serve, {"document_root": MEDIA_ROOT}),
     url(r'^cart/', include(cart_urls)),
+    url(r'^search/', include(search_urls)),
 ]
