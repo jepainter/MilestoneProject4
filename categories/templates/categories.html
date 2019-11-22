@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% block page_title %}AH: Categories{% endblock %}
+{% block page_heading %}Categories{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-around no-gutters">
+    {% for category in categories %}
+        <div class="card col-xs-10 col-sm-6 col-md-4 col-lg-3">
+            <div class="card-img-top category" style="background-image: url('{{ MEDIA_URL }}{{ category.image }}')" alt="{{ category.category_name }}"></div>
+            <div class="card-body">
+                <h5 class="card-title">{{ category.category_name }}</h5>
+                <p class="card-text">{{ category.category_description }}</p>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
