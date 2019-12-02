@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'artifacts',
     'cart',
     'categories',
-    'histories',
     'payment',
 ]
 
