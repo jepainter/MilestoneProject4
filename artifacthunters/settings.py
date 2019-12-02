@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-#import env
+import env
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'accounts',
     'artifacts',
     'cart',
+    'categories',
+    'histories',
+    'payment',
 ]
 
 MIDDLEWARE = [
@@ -129,8 +132,8 @@ STATICFILES_DIRS = (
 )
 
 # Media storage location
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Stripe key access
 STRIPE_PUBLISHABLE = os.environ.get("STRIPE_PUBLISHABLE")
