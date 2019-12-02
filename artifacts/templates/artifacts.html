@@ -12,7 +12,12 @@
             <div class="card-body">
                 <h5 class="card-title">{{ artifact.name }}</h5>
                 <p class="card-text">Description: {{ artifact.description }}</p>
-                <p class="card-text">Category:</p>
+                {% for category in categories %}
+                    {% if artifact.category_id == category.id %}
+                        <p class="card-text">Category: {{ category.category_name }}</p>
+                        <p class="card-text">Description: {{ category.category_description }}</p>
+                    {% endif %}
+                {% endfor %}
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">Reserve Price: {{ artifact.reserve_price }}</li>
