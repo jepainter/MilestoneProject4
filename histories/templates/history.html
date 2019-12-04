@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% block page_title %}AH: History{% endblock %}
+{% block page_heading %}History{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-around no-gutters">
+        {% for detail in artifact %}
+        <p>Artifact: {{ detail.artifact.name }}</p>
+        {% endfor %}
+        <p>Notable Events:</p>
+        
+        {% for event in events %}
+                <h5>Year: {{ event.event_year }}</h5>
+                <p>Era: {{ event.event_era }}</p>
+                <p>Description: {{ event.event_description }}</p>
+        {% endfor %}
+</div>
+{% endblock %}
