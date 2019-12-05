@@ -1,19 +1,14 @@
 from django import forms
-from histories.models import History
+from histories.models import HistoryEvent
 
-class HistoryEventForm(forms.Form):
+class HistoryEventForm(forms.ModelForm):
     """
-    Form to capture detail regarding history of artifact
+    Form to capture detail regarding an event in history of artifact
     """
-    era_choices = [
-        "BC", "AC", "Stone Age", "Bronze Age", "Iron Age",
-        "Machine Age", "Atomic Age", "Space Age", "Information Age"
-        ]
-        
     class Meta:
-        model = History
+        model = HistoryEvent
         fields = {
-            "event_description",
             "event_year",
             "event_era",
+            "event_description",
         }
