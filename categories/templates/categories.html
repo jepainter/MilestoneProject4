@@ -12,9 +12,11 @@
             <div class="card-body">
                 <h5 class="card-title">{{ category.category_name }}</h5>
                 <p class="card-text">{{ category.category_description }}</p>
+                <a href="{% url 'view_category' category.id %}">View category</a>
             </div>
         </div>
     {% endfor %}
+    
 </div>
 
 {% endblock %}
