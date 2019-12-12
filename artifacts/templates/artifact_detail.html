@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% block page_title %}AH: Artifact Detail{% endblock %}
+{% block page_heading %}Artifact Detail{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-around no-gutters">
+    {% for artifact_detail in artifact %}
+        <div class="card col-xs-10 col-sm-6 col-md-4 col-lg-3">
+            <img class="card-img-top artifact" src="url('{{ MEDIA_URL }}{{ artifact_detail.image }}')" alt="{{ artifact_detail.name }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ artifact_detail.name }}</h5>
+                <p class="card-text">Description: {{ artifact_detail.description }}</p>
+                <p class="card-text">Category: {{ artifact_detail.category.category_name }}</p>
+                <p class="card-text">Description: {{ artifact_detail.category.category_description }}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Reserve Price: {{ artifact_detail.reserve_price }}</li>
+                <li class="list-group-item">
+                    <h6>Place a bid:</h6>
+                    <form action="#" method="POST">
+                        {% csrf_token %}
+                        <input name="quantity" type="number" min="1" max="{{ artifact_detail.quantity }}" class="form-control" placeholder="How many do you want...">
+                        <input name="amount" type="number" min="{{ artifact_detail.reserve_price }}" class="form-control" placeholder="What do you want to bid...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-success" type="submit">Place bid</button>
+                        </span>
+                    </form>
+                </li>
+                <li class="list-group-item">Purchase Price: {{ artifact_detail.purchase_price }}</li>
+                <li class="list-group-item">
+                    <h6>Purchase artifact:</h6>
+                    <form action="{% url 'add_to_cart' artifact_detail.id %}" method="POST">
+                        {% csrf_token %}
+                        <input name="quantity" type="number" min="1" max="{{ artifact_detail.quantity }}" class="form-control" placeholder="How many do you want...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-success" type="submit">Add to cart</button>
+                        </span>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
