@@ -16,14 +16,14 @@ class Order(models.Model):
     date = models.DateField()
     
     def __str__(self):
-        return "{0) - {1} - {2}".format(self.id, self.date, self.full_name)
+        return "{0} - {1} - {2}".format(self.id, self.date, self.full_name)
         
 class OrderLineItem(models.Model):
     """
     Model for managing individual line items of order
     """
-    order = models.ForeignKey(Order, null=False)
-    artifact = models.ForeignKey(Artifact, null=False)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=False)
+    artifact = models.ForeignKey(Artifact, on_delete=models.CASCADE, null=False)
     quantity = models.IntegerField(blank=False)
     
     def __str__(self):

@@ -25,4 +25,4 @@ def cart_contents(request):
         "cart_items": cart_items,
         "total": total,
         "artifact_count": artifact_count
-        }
+    }

@@ -10,11 +10,18 @@ def all_artifacts(request):
     return render(request, "artifacts.html", {"artifacts": artifacts, "categories": categories})
 
 def view_artifact(request, id):
-    artifact = Artifact.objects.filter(id)
+    artifact = Artifact.objects.filter(id=id)
     print("------")
-    print(artifact)
+    print("## Inside the view artifact function ##")
+    print("Artifact: " + str(artifact))
+    for artifact_detail in artifact:
+        print("Artifact Name: " + str(artifact_detail.name))
+        print("Artifact Id: " + str(artifact_detail.id))
+        print("Category Id: " + str(artifact_detail.category))
     
-    category = Category.objects.filter(artifact.category)
+    category = Category.objects.filter(category_name=artifact_detail.category)
+    #categories = Category.objects.all()
     
-    print(category)
-    return render(request, "artifacts.html", {"artifacts": artifact, "categories": category})
+    print("Category: " + str(category))
+    
+    return render(request, "artifact_detail.html", {"artifact": artifact, "category": category})

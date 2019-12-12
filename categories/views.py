@@ -4,6 +4,9 @@ from artifacts.models import Artifact
 
 # Views for the categories in app
 def all_categories(request):
+    """
+    View searches all categories and renders to page_heading
+    """
     
     categories = Category.objects.all()
     return render(request, "categories.html", {"categories": categories})

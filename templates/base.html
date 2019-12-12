@@ -1,23 +1,35 @@
 {% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <!-- Style sheets -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.3.1/spacelab/bootstrap.min.css" integrity="sha256-iQE5ZOW7wyI/QCpgBU4gGoBHmb+8srKJjr3e8K0nBx8=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" type="text/css" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
-
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{% static 'logos/favicon.ico' %}" type="image/x-icon" />
+    
+    <!-- Scripts -->
+    {% block head_js %}
+    {% endblock head_js %}
+    
     <title>{% block page_title %}{% endblock %}</title>
-</head>
 
+</head>
 <body>
+    
     <!-- Navigation section -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="#">Navbar</a>
+        <a class="navbar-brand" href="/">
+            <img src="{% static 'logos/ah_logo_full4.png' %}" alt="Artifact Hunters Logo">
+            <span class="navbar-brand-text">Artifact Hunters</span>
+        </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -25,12 +37,18 @@
         <div class="collapse navbar-collapse" id="navbarColor01">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
+                    <a href="{% url 'categories' %}">Categories</a>
+                </li>
+                <li class="nav-item">
                     <a href="{% url 'artifacts' %}">Artifacts</a>
                 </li>
                 <li class="nav-item">
                     <a href="{% url 'view_cart' %}">Cart</a>
                 </li>
                 {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a href="#">Bids</a>
+                </li>
                 <li class="nav-item">
                     <a href="{% url 'profile' %}">Profile</a>
                 </li>
@@ -54,7 +72,7 @@
     </nav>
 
     <!-- Content section -->
-    <div class="container">
+    <div class="container-fluid">
         <h1>{% block page_heading %}{% endblock %}</h1>
         <hr> {% if messages %}
         <div>
@@ -63,8 +81,65 @@
         {% endif %}
         <hr> {% block content %} {% endblock %}
     </div>
+    
     <!-- Footer section -->
-    <h1>Footer goes here</h1>
+    <footer class="container-fluid">
+        <div class="row">
+            <div class="col-sm-4">
+                <h5>Developer</h5>
+                <p>This site has been created by Jonathan Painter. View the README here:
+                    <a href="#" target="_blank" aria-label="Link to readme" rel="noopener">
+                        <i class="fas fa-download" aria-hidden="true"></i>
+                        <span class="sr-only">Readme Link.</span>
+                    </a>
+                </p>
+            </div>
+            <div class="col-sm-4">
+                <h5>Disclaimer</h5>
+                <p>This site is created for education purposes only.</p>
+            </div>
+            <div class="col-sm-4">
+                <h5>Social Media</h5>
+                <p>Folow us on social media:</p>
+                <ul class="list-inline">
+                    <li class="list-inline-item">
+                        <a target="_blank" aria-label="Link to Facebook" rel="noopener" href="https://www.facebook.com/">
+                            <i class="fab fa-facebook" aria-hidden="true"></i>
+                            <span class="sr-only">Facebook</span>
+                    </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a target="_blank" aria-label="Link to Twitter" rel="noopener" href="https://twitter.com/">
+                            <i class="fab fa-twitter" aria-hidden="true"></i>
+                            <span class="sr-only">Twitter</span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a target="_blank" aria-label="Link to YouTube" rel="noopener" href="https://www.youtube.com/">
+                            <i class="fab fa-youtube" aria-hidden="true"></i>
+                            <span class="sr-only">YouTube</span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a target="_blank" aria-label="Link to Instagram" rel="noopener" href="https://instagram.com/">
+                            <i class="fab fa-instagram" aria-hidden="true"></i>
+                            <span class="sr-only">Instagram</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </footer>    
+    
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/umd/popper.min.js" integrity="sha256-fTuUgtT7O2rqoImwjrhDgbXTKUwyxxujIMRIK7TbuNU=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.dropdown-toggle').dropdown();
+        });
+    </script>
+    
 </body>
-
 </html>

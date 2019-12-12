@@ -13,12 +13,14 @@
                 <h5 class="card-title">{{ artifact.name }}</h5>
                 <p class="card-text">Description: {{ artifact.description }}</p>
                 {% for category in categories %}
-                    {% if artifact.category == category.id %}
+                    {% if artifact.category_id == category.id %}
                         <p class="card-text">Category: {{ category.category_name }}</p>
                         <p class="card-text">Description: {{ category.category_description }}</p>
                     {% endif %}
                 {% endfor %}
                 <a href="{% url 'view_artifact' artifact.id %}">View detail</a>
+                <a href="{% url 'view_history' artifact.id %}">View history</a>
+                <a href="{% url 'view_bids' artifact.id %}">View bids</a>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">Reserve Price: {{ artifact.reserve_price }}</li>

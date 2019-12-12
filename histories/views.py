@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect, reverse
 from artifacts.models import Artifact
 from histories.models import History, HistoryEvent
 from histories.forms import HistoryEventForm
-from histories.models import History
 
 # Views for the histories in app
 def view_history(request, id):
@@ -72,7 +71,12 @@ def add_history_event(request, id):
             print("Event description: " + str(event_description))
             print("History Id: " + str(history_id))
             
-            event = HistoryEvent.objects.create(history_id_id=history_id, event_year=event_year, event_era=event_era, event_description=event_description)
+            event = HistoryEvent.objects.create(
+                history_id_id=history_id,
+                event_year=event_year,
+                event_era=event_era,
+                event_description=event_description
+                )
             event.save()
             
         else:

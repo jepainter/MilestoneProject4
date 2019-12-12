@@ -1,7 +1,7 @@
 from django.db import models
 from artifacts.models import Artifact
 
-# Model for history/events related to an artifact
+# Models for history and events related to an artifact
 class History(models.Model):
     """
     Model for history associated with a specific artifact
