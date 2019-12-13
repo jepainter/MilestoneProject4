@@ -28,14 +28,16 @@ class BidLineItem(models.Model):
     
     bid_event = models.ForeignKey(BidEvent, on_delete=models.CASCADE, null=False)
     bid_amount = models.DecimalField(max_digits=10, decimal_places=2, null=False)
+    bid_quantity = models.IntegerField(null=False, default=1)
     #user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     
     def __str__(self):
-        return "Bid Line Id: {0} for Bid Event Id: {1} by Bidder:  with Bid: {2}".format(
+        return "Bid Line Id: {0} for Bid Event Id: {1} by Bidder:  with Bid: {2} of Quantity: {3}".format(
             self.id,
             self.bid_event.id,
             #self.user_id,
             self.bid_amount,
+            self.bid_quantity,
             )
 
 
