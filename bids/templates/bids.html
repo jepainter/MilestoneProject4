@@ -5,17 +5,26 @@
 
 {% block content %}
 <div class="row justify-content-around no-gutters">
-    <p>Artifact ID: {{ artifact_id }}</p>
-    <p>Artifact Name: {{ artifact_name }}</p>
-    <p>Reserve Price: {{ reserve_price }}</p>
-    <p>Current Bid: {{ highest_bid }}</p>
+    <div class="col-3">
+        <p>Artifact ID: {{ artifact_id }}</p>
+        <p>Artifact Name: {{ artifact_name }}</p>
+        <p>Bid Event ID: {{ bid_event_id }}</p>
+        <p>Reserve Price: {{ reserve_price }}</p>
+        <p>Highest Bid: {{ highest_bid }}</p>
+    </div>
+    <div class="col-5">
+        <p>Form position</p>    
+    </div>
 </div>
 
 <div class="row">
     {% for bid in bids %}
-        <p>Bid ID: {{ bid.id }}</p>
-        <p>Artifact name: {{ bid.bid_id.artifact.name }}</p>
+    <div class="col-3">
+        <p>Bid Event Id: {{ bid.bid_event.id }}</p>
+        <p>Bid Line Id: {{ bid.id }}</p>
+        <p>Artifact name: {{ bid.bid_event.artifact.name }}</p>
         <p>Bid Amount: {{ bid.bid_amount }}</p>
+    </div>
     {% endfor %}
 </div>
 {% endblock %}

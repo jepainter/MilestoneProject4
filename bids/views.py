@@ -1,48 +1,40 @@
 from django.shortcuts import render, redirect, reverse
 #from artifacts.models import Artifact
-from bids.models import Bid, BidLineItem
+from bids.models import BidEvent, BidLineItem
 
 # Views for managing the bidding
 def view_bids(request, id):
     """
-    View to get data for bids on artifacts
+    View to get data for bids on a specific artifact. 
+    Look up a bid event associated with the artifact id.
+    Further look up of associated bids with the bid event id.
     """
     
     print("")
     print("## Inside view all bids function ##")
-    print("ID: " + str(id))
+    print("Artifact_ID: " + str(id))
     
-    artifact_id=id
+    bid_event = BidEvent.objects.filter(artifact=id)
+    for bid_detail in bid_event:
+        artifact_name = bid_detail.artifact.name
+        reserve_price = bid_detail.artifact.reserve_price
+        highest_bid = bid_detail.highest_bid
+        bid_event_id = bid_detail.id
     
-    artifact = Bid.objects.filter(artifact_id=id)
-    for artifact_info in artifact:
-        artifact_name = artifact_info.artifact.name
-        reserve_price = artifact_info.artifact.reserve_price
-        highest_bid = artifact_info.highest_bid
-        bid_id = artifact_info.id
-    
-    print("Artifact: " + str(artifact))
+    print("Bid Event: " + str(bid_event))
     print("")
     
-    
-    bids = BidLineItem.objects.filter(bid_id=bid_id)
+    bids = BidLineItem.objects.filter(bid_event=bid_event_id)
     
     print("")
-    print("## Bid Event ##")
+    print("## Bid Lines ##")
     print(bids)
     
-    for bid in bids:
-        artifact_n = bid.bid_id.artifact.name
-        highest_b = bid.bid_id.highest_bid
-    
-    print("")
-    print("Bid.Bid_Id: " + str(artifact_n))
-    print("Bid.Bid_current: " + str(highest_b))
-    
     return render(request, "bids.html", {
-        "artifact_id": artifact_id,
-        "reserve_price": reserve_price,
+        "artifact_id": id,
         "artifact_name": artifact_name,
+        "reserve_price": reserve_price,
+        "bid_event_id": bid_event_id,
         "highest_bid": highest_bid,
         "bids": bids,
         }
