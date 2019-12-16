@@ -10,23 +10,46 @@
         <p>Artifact ID: {{ artifact_id }}</p>
         <p>Artifact Name: {{ artifact_name }}</p>
         <p>Bid Event ID: {{ bid_event_id }}</p>
+        <p>Bid Event Status: {{ bid_event_status }}</p>
         <p>Reserve Price: {{ reserve_price }}</p>
         <p>Highest Bid: {{ highest_bid }}</p>
     </div>
     
-    {% if bid_form %}
+    {% if bid_event_status == "Bidding Open"  %}
     <div class="col-5">
-        <form role="form" method="POST" id="bid-form" action="{% url 'add_bid' artifact_id %}">
+        <!--<form role="form" method="POST" id="bid-form" action="{% url 'add_bid' artifact_id %}">
             <h3>Bidding Form</h3>
             <p>{{ bid_form.bid_amount.label }}: {{ bid_form.bid_amount }}</p>
             <p>{{ bid_form.bid_quantity.label }}: {{ bid_form.bid_quantity }}</p>
             {% csrf_token %}
             <input class="btn btn-primary" id="submit_bid_btn" type="submit" value="Make Bid">
+        </form>-->
+        <form role="form" action="{% url 'add_bid' artifact_id %}" name="bid_form" method="POST">
+            <h3>Place Bid:</h3>
+            <label for="bid_amount">Amount:</label>
+            <input name="bid_amount" type="number" min="{{ reserve_price }}" step="0.01" class="form-control" placeholder="Enter bid amount" required>
+            <label for="bid_quantity">Quantity:</label>
+            <input name="bid_quantity" type="number" min="1" max="{{ artifact_quantity }}" class="form-control" placeholder="Enter bid quantity" required>
+            {% csrf_token %}
+            <span class="input-group-btn">
+                <button class="btn btn-success" type="submit">Add bid</button>
+            </span>
         </form>
+    </div>
+    {% else %}
+    <div class="col-5">
+        <h3>Bidding:</h3>
+        {% if bid_event_status == "Bidding Closed" %}
+            <p>Bidding Closed for this Artifact</p>
+        {% else %}
+            <p>Bidding Not Available for this Artifact</p>
+        {% endif %}
     </div>
     {% endif %}
 </div>
 
+
+{% if bid_event_status == "Bidding Open"  %}
 <div class="row">
     {% for bid in bids %}
     <div class="col-3">
@@ -35,11 +58,11 @@
         <p>Artifact name: {{ bid.bid_event.artifact.name }}</p>
         <p>Bid Amount: {{ bid.bid_amount }}</p>
         <p>Bid Quantity: {{ bid.bid_quantity }}</p>
-        <form action="{% url 'adjust_bid' bid.id %}" method="POST">
-            <label for="quantity">Change Amount:</label>
-            <input name="amount" type="number" min="0" class="form-control" value="{{ bid.bid_amount }}" placeholder="Adjust amount">
-            <label for="quantity">Change Quantity:</label>
-            <input name="quantity" type="number" min="0" max="{{ bid.bid_event.artifact.quantity }}" class="form-control" value="{{ bid.bid_quantity }}" placeholder="Adjust quantity">
+        <form role="form" action="{% url 'adjust_bid' bid.id %}" method="POST">
+            <label for="adjust_amount">Change Amount:</label>
+            <input name="adjust_amount" type="number" min="0.00" step="0.01" class="form-control" value="{{ bid.bid_amount }}" placeholder="Adjust amount">
+            <label for="adjust_quantity">Change Quantity:</label>
+            <input name="adjust_quantity" type="number" min="0" max="{{ bid.bid_event.artifact.quantity }}" class="form-control" value="{{ bid.bid_quantity }}" placeholder="Adjust quantity">
             {% csrf_token %}
             <span class="input-group-btn">
                 <button class="btn btn-success" type="submit">Adjust bid</button>
@@ -48,4 +71,8 @@
     </div>
     {% endfor %}
 </div>
+{% endif %}
+
+
+
 {% endblock %}
