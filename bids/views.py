@@ -6,7 +6,7 @@ from bids.forms import BidDetailsForm
 # Views for managing the bidding
 def view_bids(request, id):
     """
-    View to get data for bids on a specific artifact. 
+    Get data for bids on a specific artifact. 
     Look up a bid event associated with the artifact id.
     Further look up of associated bids with the bid event id.
     """
@@ -57,7 +57,10 @@ def view_bids(request, id):
 
 def add_bid(request, id):
     """
-    Add a bid on a particular artifact
+    Add a bid on a particular artifact.
+    Look up relevent bid event to add bid to.
+    
+    
     FIX FORM VALIDATION ERROR FOR 0.01 Amount submission
     """
     
@@ -104,3 +107,48 @@ def add_bid(request, id):
        print("Else statement for non POST method")
     
     return redirect("view_bids", id=id)
+
+def adjust_bid(request, id):
+    """
+    Adjust a bid placed from a specific event.
+    Zero value inputs will remove the bid from bid event.
+    """
+    
+    print("")
+    print("## Inside the adjust a bid function ##")
+    print("Bid Line ID: " + str(id))
+    
+    new_quantity = int(request.POST.get("quantity"))
+    new_amount = float(request.POST.get("amount"))
+    
+    print("New Quantity: " + str(new_quantity))
+    print("New Amount: " + str (new_amount))
+    
+    bid_line_item = BidLineItem.objects.get(id=id)
+    
+    print("")
+    print("Bid Line Detail: " + str(bid_line_item))
+    print()
+    
+    if new_quantity == 0 or new_amount == 0:
+        print("")
+        print("Deleting bid line item")
+        bid_line_item.delete()
+        print("Bid Line Detail: " + str(bid_line_item))
+        
+    else:
+        print("")
+        print("Inserting new quantit or amount")
+        
+        bid_line_item.bid_amount = new_amount
+        bid_line_item.bid_quantity = new_quantity
+        bid_line_item.save()
+        print("Revised bid: " + str(bid_line_item))
+        print
+    
+    
+    
+    print("## Exiting the adjust bid function ##")
+    
+    return redirect("view_bids", id=id)
+    

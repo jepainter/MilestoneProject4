@@ -35,6 +35,16 @@
         <p>Artifact name: {{ bid.bid_event.artifact.name }}</p>
         <p>Bid Amount: {{ bid.bid_amount }}</p>
         <p>Bid Quantity: {{ bid.bid_quantity }}</p>
+        <form action="{% url 'adjust_bid' bid.id %}" method="POST">
+            <label for="quantity">Change Amount:</label>
+            <input name="amount" type="number" min="0" class="form-control" value="{{ bid.bid_amount }}" placeholder="Adjust amount">
+            <label for="quantity">Change Quantity:</label>
+            <input name="quantity" type="number" min="0" max="{{ bid.bid_event.artifact.quantity }}" class="form-control" value="{{ bid.bid_quantity }}" placeholder="Adjust quantity">
+            {% csrf_token %}
+            <span class="input-group-btn">
+                <button class="btn btn-success" type="submit">Adjust bid</button>
+            </span>
+        </form>
     </div>
     {% endfor %}
 </div>
