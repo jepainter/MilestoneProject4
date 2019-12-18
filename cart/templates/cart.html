@@ -23,6 +23,7 @@
                             <button class="btn btn-success" type="submit">Adjust quantity</button>
                         </span>
                     </form>
+                    <a href="{% url 'remove_item_from_cart' item.id %}" method="POST">Remove item</a>
                 </li>
             </ul>
         </div>
