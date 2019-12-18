@@ -56,6 +56,7 @@
         <p>Bid Event Id: {{ bid.bid_event.id }}</p>
         <p>Bid Line Id: {{ bid.id }}</p>
         <p>Artifact name: {{ bid.bid_event.artifact.name }}</p>
+        <p>Bidder: {{ bid.bid_user.username }}</p>
         <p>Bid Amount: {{ bid.bid_amount }}</p>
         <p>Bid Quantity: {{ bid.bid_quantity }}</p>
         <form role="form" action="{% url 'adjust_bid' bid.id %}" method="POST">
@@ -68,6 +69,7 @@
                 <button class="btn btn-success" type="submit">Adjust bid</button>
             </span>
         </form>
+        <a href="{% url 'remove_bid' bid.id %}" method="POST">Remove bid</a>
     </div>
     {% endfor %}
 </div>

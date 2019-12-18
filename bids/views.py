@@ -42,8 +42,7 @@ def view_bids(request, id):
     
 #    print("")
     
-    bids = BidLineItem.objects.filter(bid_event=bid_event_id).filter(bid_user=request.user.id)
-    
+    bids = BidLineItem.objects.filter(bid_event=bid_event_id)
 #    print("")
 #    print("## Bid Lines ##")
 #    print(bids)
@@ -175,6 +174,26 @@ def adjust_bid(request, id):
         
         
     #    print("## Exiting the adjust bid function ##")
+    
+    return redirect("view_bids", id=bid_line_item.bid_event.artifact_id)
+
+@login_required
+def remove_bid(request, id):
+    """
+    Remove a bid placed by the user
+    """
+    
+   # if request.method == "POST":
+    
+    bid_line_item = BidLineItem.objects.get(id=id)
+    print("")
+    print("## Inside delete bid function ##")
+    print("Bid Line Item: " + str(bid_line_item))
+    
+    bid_line_item.delete()
+    print("")
+    print("After delete")
+    print("Bid Line Item: " + str(bid_line_item))
     
     return redirect("view_bids", id=bid_line_item.bid_event.artifact_id)
     
