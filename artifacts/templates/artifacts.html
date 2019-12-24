@@ -13,36 +13,9 @@
                 <h5 class="card-title">{{ artifact.name }}</h5>
                 <p class="card-text">Description: {{ artifact.description }}</p>
                 <p class="card-text">Category: {{ artifact.category.category_name }}</p>
-                <p class="card-text">Description: {{ artifact.category.category_description }}</p>
                 <a href="{% url 'view_artifact' artifact.id %}">View detail</a>
-                <a href="{% url 'view_history' artifact.id %}">View history</a>
                 <a href="{% url 'view_bids' artifact.id %}">View bids</a>
             </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Reserve Price: {{ artifact.reserve_price }}</li>
-                <li class="list-group-item">
-                    <h6>Place a bid:</h6>
-                    <form action="#" method="POST">
-                        {% csrf_token %}
-                        <input name="quantity" type="number" min="1" max="{{ artifact.quantity }}" class="form-control" placeholder="How many do you want...">
-                        <input name="amount" type="number" min="{{ artifact.reserve_price }}" class="form-control" placeholder="What do you want to bid...">
-                        <span class="input-group-btn">
-                            <button class="btn btn-success" type="submit">Place bid</button>
-                        </span>
-                    </form>
-                </li>
-                <li class="list-group-item">Purchase Price: {{ artifact.purchase_price }}</li>
-                <li class="list-group-item">
-                    <h6>Purchase artifact:</h6>
-                    <form action="{% url 'add_to_cart' artifact.id %}" method="POST">
-                        {% csrf_token %}
-                        <input name="quantity" type="number" min="1" max="{{ artifact.quantity }}" class="form-control" placeholder="How many do you want...">
-                        <span class="input-group-btn">
-                            <button class="btn btn-success" type="submit">Add to cart</button>
-                        </span>
-                    </form>
-                </li>
-            </ul>
         </div>
     {% endfor %}
 </div>
