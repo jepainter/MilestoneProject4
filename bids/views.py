@@ -103,16 +103,28 @@ def add_bid(request, id):
             print("Yes")
             print(bid_line_item_exists)
             
-        
         else:
             print("No")
             print(bid_line_item_exists)
+            
+            #highest_bid_status = determine_highest_bid(bid_event.id, bid_amount)
+            
+            #if highest_bid_status == True:
+             #   bid_line_item = BidLineItem(
+              #      bid_event = bid_event,
+               #     bid_amount = bid_amount,
+                #    bid_quantity = bid_quantity,
+                 #   bid_user = User.objects.get(id=request.user.id),
+                  #  bid_highest = True,
+                  #  )
+            #else:
             bid_line_item = BidLineItem(
-            bid_event = bid_event,
-            bid_amount = bid_amount,
-            bid_quantity = bid_quantity,
-            bid_user = User.objects.get(id=request.user.id),
-            )
+                bid_event = bid_event,
+                bid_amount = bid_amount,
+                bid_quantity = bid_quantity,
+                bid_user = User.objects.get(id=request.user.id),
+                )
+            
             print("Bid Line Item: " + str(bid_line_item))
             bid_line_item.save()
     
@@ -139,6 +151,8 @@ def add_bid(request, id):
     else:
        #bid_form = BidDetailsForm()
        print("Else statement for non POST method")
+    
+    set_highest_bid(bid_event.id)
     
     return redirect("view_bids", id=id)
 
@@ -225,25 +239,35 @@ def adjust_bid(request, id):
     #        print("")
     #        print("Inserting new quantity or amount")
             
-            previous_highest_bid = BidLineItem.objects.filter(bid_event=bid_line_item.bid_event).filter(bid_highest=True)
+           #previous_highest_bid = BidLineItem.objects.filter(bid_event=bid_line_item.bid_event).filter(bid_highest=True)
             
-            if not previous_highest_bid:
-                print("No previous highest bid")
-                bid_line_item.bid_highest = True
+            #if not previous_highest_bid:
+            #    print("No previous highest bid")
+            #    bid_line_item.bid_highest = True
             
-            else:
-                print("Previous highest bid found")
-                print("Previous highest bid: " + str(previous_highest_bid))
-                for bid_info in previous_highest_bid:
-                    if bid_info.bid_amount <= new_amount:
-                        bid_info.bid_highest = False
-                        bid_info.save()
-                        bid_line_item.bid_highest = True
-                        print("Changed current bid to highest")
+            #else:
+            #    print("Previous highest bid found")
+            #    print("Previous highest bid: " + str(previous_highest_bid))
+            #    for bid_info in previous_highest_bid:
+            #        if bid_info.bid_amount <= new_amount:
+            #            bid_info.bid_highest = False
+            #            bid_info.save()
+            #            bid_line_item.bid_highest = True
+            #            print("Changed current bid to highest")
                     
-                    else:
-                        bid_line_item.bid_highest = False
-                        print("Did not change current bid to highest")
+            #        else:
+            #            bid_line_item.bid_highest = False
+            #            print("Did not change current bid to highest")
+            
+#            highest_bid_status = determine_highest_bid(bid_line_item.bid_event.id ,new_amount)
+            
+#            if highest_bid_status == True:
+#                print("Changing current bid to highest")
+#                bid_line_item.bid_highest = True
+#            else:
+#                print("Not changing current bid to highest")
+#                bid_line_item.bid_highest = False
+                
             
             bid_line_item.bid_amount = new_amount
             bid_line_item.bid_quantity = new_quantity
@@ -257,6 +281,9 @@ def adjust_bid(request, id):
         print("Bid New Amount: " + str(new_amount))
         
         print("## Exiting the adjust bid function ##")
+    
+    set_highest_bid(bid_line_item.bid_event.id)
+    
     
     return redirect("view_user_bids")
 
@@ -272,11 +299,22 @@ def remove_bid(request, id):
     print("")
     print("## Inside delete bid function ##")
     print("Bid Line Item: " + str(bid_line_item))
+    print("Bid highest: " + str(bid_line_item.bid_highest))
+    print("Bid Event: " + str(bid_line_item.bid_event.id))
+    
+    
+    #if bid_line_item.bid_highest == True:
+     #   highest_bid = BidLineItem.objects.filter(bid_event=bid_line_item.bid_event).order_by('-bid_amount').first()
+      #  print("Highest bid: " + str(highest_bid))
+       # highest_bid.bid_highest = True
+        #highest_bid.save()
     
     bid_line_item.delete()
     print("")
     print("After delete")
     print("Bid Line Item: " + str(bid_line_item))
+    
+    set_highest_bid(bid_line_item.bid_event.id)
     
     return redirect("view_bids", id=bid_line_item.bid_event.artifact_id)
 
@@ -302,3 +340,31 @@ def view_user_bids(request):
     
     return render(request, "mybids.html", {"user": bidder, "bids": user_bids})
     
+
+def set_highest_bid(id):
+    """
+    Function to reset highest bid in an event
+    if a new bid or adjusted bid is higher or 
+    if existing highest bid is deleted
+    """
+    
+    print("")
+    print("## Inside determine highest bid function ##")
+    
+    try:
+        existing_highest_bid = BidLineItem.objects.filter(bid_event=id).get(bid_highest=True)
+        print("Setting existing highest bid to false")
+        print(existing_highest_bid)
+        existing_highest_bid.bid_highest = False 
+        existing_highest_bid.save()
+    
+    except:
+        print("No bid set with highest flag yet")
+    
+    print("Looking up new highest bid and setting to true")
+    new_highest_bid = BidLineItem.objects.filter(bid_event=id).order_by('-bid_amount').first()
+    new_highest_bid.bid_highest = True
+    print(new_highest_bid)
+    new_highest_bid.save()
+    
+    return True
