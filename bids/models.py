@@ -39,6 +39,7 @@ class BidLineItem(models.Model):
     bid_amount = models.DecimalField(max_digits=10, decimal_places=2, null=False)
     bid_quantity = models.IntegerField(null=False, default=1)
     bid_user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, default=1)
+    bid_highest = models.BooleanField(null=False, default=False)
     
     def __str__(self):
         return "Bid Line Id: {0} for Bid Event Id: {1} by Bidder: {2} with Bid: {3} of Quantity: {4}".format(
