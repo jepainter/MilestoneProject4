@@ -49,10 +49,10 @@ def payment(request):
                 request.session["cart"] = {}
                 return redirect(reverse('artifacts'))
             else:
-                messages.error(request, "We were unable to process payment.")
+                messages.error(request, "We were unable to process payment1.")
         else:
             print(payment_form.errors)
-            messages.error(request, "We were unable to process payment.")
+            messages.error(request, "We were unable to process payment2.")
     else:
         payment_form = PaymentDetailsForm()
         order_form = OrderDetailsForm()
