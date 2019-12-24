@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from artifacts.models import Artifact
+from bids.models import BidLineItem
 
 def cart_contents(request):
     """
@@ -13,13 +14,26 @@ def cart_contents(request):
     
     for id, quantity in cart.items():
         artifact = get_object_or_404(Artifact, pk=id)
-        total += quantity * artifact.purchase_price
-        artifact_count += quantity
-        cart_items.append({
-            "id": id,
-            "quantity": quantity,
-            "artifact": artifact
-        })
+        try:
+            bid = BidLineItem.objects.filter(bid_event__artifact=id).get(bid_highest=True)
+            total += quantity * bid.bid_amount
+            artifact_count += quantity
+            cart_items.append({
+                "id": id,
+                "quantity": quantity,
+                "artifact": artifact,
+                "bid": bid,
+            })
+        
+        except:
+            total += quantity * artifact.purchase_price
+            artifact_count += quantity
+            cart_items.append({
+                "id": id,
+                "quantity": quantity,
+                "artifact": artifact,
+                "bid": "",
+            })
         
     return {
         "cart_items": cart_items,

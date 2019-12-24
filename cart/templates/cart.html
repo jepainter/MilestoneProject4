@@ -13,9 +13,13 @@
                 <p class="card-text">Description: {{ item.artifact.description }}</p>
             </div>
             <ul class="list-group list-group-flush">
+                {% if item.bid %}
+                <li class="list-group-item">Bid Amount: {{ item.bid.bid_amount }}</li>
+                <li class="list-group-item">Quantity: {{ item.bid.bid_quantity }}</li>
+                {% else %}
                 <li class="list-group-item">Purchase Price: {{ item.artifact.purchase_price }}</li>
                 <li class="list-group-item">
-                    <h6>Purchase artifact:</h6>
+                    <h6>Quantity:</h6>
                     <form action="{% url 'adjust_cart' item.id %}" method="POST">
                         {% csrf_token %}
                         <input name="quantity" type="number" min="0" max="{{ item.artifact.quantity }}" class="form-control" placeholder="{{ item.quantity }}">
@@ -23,7 +27,10 @@
                             <button class="btn btn-success" type="submit">Adjust quantity</button>
                         </span>
                     </form>
-                    <a href="{% url 'remove_item_from_cart' item.id %}" method="POST">Remove item</a>
+                </li>
+                {% endif %}
+                <li class="list-group-item">
+                <a href="{% url 'remove_item_from_cart' item.id %}" method="POST">Remove item</a>
                 </li>
             </ul>
         </div>
