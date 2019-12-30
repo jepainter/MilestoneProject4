@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from decimal import Decimal
 from django.db.models import Max
-#from artifacts.models import Artifact
+from django.utils import timezone
+from artifacts.models import Artifact
 from bids.models import BidEvent, BidLineItem
 from bids.forms import BidDetailsForm
     
@@ -20,46 +21,43 @@ def view_bids(request, id):
 #    print("## Inside view all bids function ##")
 #    print("Artifact_ID: " + str(id))
     
-    bid_event = BidEvent.objects.filter(artifact=id)
-#    print("Bid Event: " + str(bid_event))
-    if bid_event:
-#        print("Bid Event Exists")
-        for bid_detail in bid_event:
-            artifact_name = bid_detail.artifact.name
-            artifact_quantity = bid_detail.artifact.quantity
-            reserve_price = bid_detail.artifact.reserve_price
-            highest_bid = bid_detail.highest_bid
-            bid_event_id = bid_detail.id
-            bid_event_status = bid_detail.bid_event_status
+    try:
+        bid_event = BidEvent.objects.get(artifact=id)
+        bid_event_status = bid_event.bid_event_status
+        bid_event_deadline = bid_event.bid_event_deadline
+        artifact = bid_event.artifact
+        bids = BidLineItem.objects.filter(bid_event=bid_event)
+        print("Checking bid detail")
+        print(bid_event.bid_event_status)
+    except:
+        print("No bid event exists")
+        bid_event_status = "Bidding Closed"
+        bid_event = ""
+        bids = ""
+        artifact = Artifact.objects.get(id=id)
     
-    else:
-#        print("Bid event does not exist")
-        artifact_name = "Test DS9"
-        reserve_price = "404404"
-        highest_bid = "404404404"
-        bid_event_id = 0
-        bid_event_status = "Bidding Not Available"
-        
+    print("Bid Event: " + str(bid_event))
+    
+    print("")
     
     
-#    print("")
-    
-    bids = BidLineItem.objects.filter(bid_event=bid_event_id)
-#    print("")
-#    print("## Bid Lines ##")
-#    print(bids)
+    print("")
+    print("## Bid Lines ##")
+    print(bids)
     
 #    bid_form = BidDetailsForm()
+
+    datetime=timezone.now()
+    print("DateTime: " + str(datetime))
     
     return render(request, "bids.html", {
-        "artifact_id": id,
-        "artifact_name": artifact_name,
-        "artifact_quantity": artifact_quantity,
-        "reserve_price": reserve_price,
-        "bid_event_id": bid_event_id,
-        "bid_event_status": bid_event_status,
-        "highest_bid": highest_bid,
+        "artifact": artifact,
+        "bid_event": bid_event,
+#        "bid_event_status": bid_event_status,
+#        "bid_event_deadline": bid_event_deadline,
+#        "highest_bid": highest_bid,
         "bids": bids,
+        "datetime": timezone.now(),
 #        "bid_form": bid_form,
         }
     )
