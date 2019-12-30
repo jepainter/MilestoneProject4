@@ -72,6 +72,8 @@ def add_bid(request, id):
     
     FIX FORM VALIDATION ERROR FOR 0.01 Amount submission
     """
+    bid_time = timezone.now()
+    print("Date time: " + str(bid_time))
     
     if request.method == "POST":
         
@@ -88,43 +90,38 @@ def add_bid(request, id):
         print("Bid form valid")
         
         bid_event = BidEvent.objects.get(artifact_id=id)
-#            print("Bid Event: " + str(bid_event))
+        print("Bid Event: " + str(bid_event))
         
         bid_quantity = int(request.POST.get("bid_quantity"))
         bid_amount = float(request.POST.get("bid_amount"))
         print("Bid amount: " + str(bid_amount))
         print("Bid quantity: " + str(bid_quantity))
         
-        bid_line_item_exists = BidLineItem.objects.filter(bid_user=request.user.id).filter(bid_event__artifact=id)
-        print("Bid line exists? ")
-        if bid_line_item_exists:
+        try:
+            bid_line_item = BidLineItem.objects.filter(bid_user=request.user.id).get(bid_event__artifact=id)
+            print("Bid line exists? ")
             print("Yes")
-            print(bid_line_item_exists)
+            print(bid_line_item)
             
-        else:
+        except:
+            print("Bid line exists? ")
             print("No")
-            print(bid_line_item_exists)
+            #print(bid_line_item_exists)
             
-            #highest_bid_status = determine_highest_bid(bid_event.id, bid_amount)
+            if bid_time < bid_event.bid_event_deadline:
+                print("Bid before deadline: ")
+                new_bid_line_item = BidLineItem(
+                    bid_event = bid_event,
+                    bid_amount = bid_amount,
+                    bid_quantity = bid_quantity,
+                    bid_user = User.objects.get(id=request.user.id),
+                    bid_date_time = bid_time,
+                    )
             
-            #if highest_bid_status == True:
-             #   bid_line_item = BidLineItem(
-              #      bid_event = bid_event,
-               #     bid_amount = bid_amount,
-                #    bid_quantity = bid_quantity,
-                 #   bid_user = User.objects.get(id=request.user.id),
-                  #  bid_highest = True,
-                  #  )
-            #else:
-            bid_line_item = BidLineItem(
-                bid_event = bid_event,
-                bid_amount = bid_amount,
-                bid_quantity = bid_quantity,
-                bid_user = User.objects.get(id=request.user.id),
-                )
-            
-            print("Bid Line Item: " + str(bid_line_item))
-            bid_line_item.save()
+                print("Bid Line Item: " + str(new_bid_line_item))
+                new_bid_line_item.save()
+            else:
+                print("Bid after deadline, bid not accepted")
     
 #        else:
 #            print("")
@@ -168,7 +165,8 @@ def adjust_bid(request, id):
     print("")
     print("## Inside the adjust a bid function ##")
     print("Bid Line ID: " + str(id))
-
+    
+    bid_time = timezone.now()
     if request.method =="POST":
         
         try:
@@ -266,22 +264,26 @@ def adjust_bid(request, id):
 #                print("Not changing current bid to highest")
 #                bid_line_item.bid_highest = False
                 
-            
-            bid_line_item.bid_amount = new_amount
-            bid_line_item.bid_quantity = new_quantity
-            bid_line_item.bid_user = User.objects.get(id=request.user.id)
-            bid_line_item.save()
+            if bid_time < bid_line_item.bid_event.bid_event_deadline:
+                print("Bid before deadline")
+                bid_line_item.bid_amount = new_amount
+                bid_line_item.bid_quantity = new_quantity
+                bid_line_item.bid_user = User.objects.get(id=request.user.id)
+                bid_line_item.bid_date_time = bid_time
+                bid_line_item.save()
     #        print("Revised bid: " + str(bid_line_item))
     #        artifact_id = bid_line_item.bid_event.artifact_id
     #        print("Artifact Id: " + str(artifact_id))
+    
+            else:
+                print("Bid after deadline, no adjustment made")
         
-        print("Bid Event: " + str(bid_line_item.bid_event.id))
-        print("Bid New Amount: " + str(new_amount))
+       # print("Bid Event: " + str(bid_line_item.bid_event.id))
+        #print("Bid New Amount: " + str(new_amount))
         
         print("## Exiting the adjust bid function ##")
     
     set_highest_bid(bid_line_item.bid_event.id)
-    
     
     return redirect("view_user_bids")
 
@@ -292,6 +294,8 @@ def remove_bid(request, id):
     """
     
    # if request.method == "POST":
+    
+    bid_time = timezone.now()
     
     bid_line_item = BidLineItem.objects.get(id=id)
     print("")
@@ -306,11 +310,13 @@ def remove_bid(request, id):
       #  print("Highest bid: " + str(highest_bid))
        # highest_bid.bid_highest = True
         #highest_bid.save()
-    
-    bid_line_item.delete()
-    print("")
-    print("After delete")
-    print("Bid Line Item: " + str(bid_line_item))
+    if bid_time < bid_line_item.bid_event.bid_event_deadline:
+        bid_line_item.delete()
+        print("Bid deleted before deadline")
+        print("After delete")
+        print("Bid Line Item: " + str(bid_line_item))
+    else:
+        print("Bid removed after deadline, not deleted")
     
     set_highest_bid(bid_line_item.bid_event.id)
     
@@ -336,7 +342,12 @@ def view_user_bids(request):
     print("Bids: " + str(user_bids))
     
     
-    return render(request, "mybids.html", {"user": bidder, "bids": user_bids})
+    return render(request, "mybids.html", {
+        "user": bidder,
+        "bids": user_bids,
+        "datetime": timezone.now()
+        }
+    )
     
 
 def set_highest_bid(id):
