@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.utils import timezone
 from artifacts.models import Artifact
 from histories.models import HistoryEvent
 from bids.models import BidEvent, BidLineItem
@@ -25,6 +26,7 @@ def view_artifact(request, id):
     try:
         bid = BidEvent.objects.get(artifact=id)
         bid_event_status = bid.bid_event_status
+        bid_event_deadline = bid.bid_event_deadline
         artifact = bid.artifact
         print("Checking bid detail")
         print(bid)
@@ -88,6 +90,8 @@ def view_artifact(request, id):
     return render(request, "artifact_detail.html", {
         "artifact": artifact,
         "bid_event_status": bid_event_status,
+        "bid_event_deadline": bid_event_deadline,
+        "datetime": timezone.now(),
         "events": events,
         "bid_line_item" : bid_line_item,
         })

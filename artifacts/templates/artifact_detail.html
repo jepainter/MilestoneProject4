@@ -17,7 +17,10 @@
     </div>
     <div class="card col-sm-10 col-md-4 col-lg-3">    
         <ul class="list-group list-group-flush">
-            {% if bid_event_status == "Bidding Open" %}
+            <p>Bid Deadline: {{ bid_event_deadline }}</p>
+            <p>Time now: {{ datetime }}</p>
+            {% if bid_event_deadline > datetime %}
+            <p>Bidding open</p>
                 {% if user.is_authenticated %}
                     {% if bid_line_item %}
                         {% for bid_detail in bid_line_item %}
@@ -54,7 +57,9 @@
                 <p>You need to log in first</p>
                 <a href="{% url 'login' %}">Log in</a>
                 {% endif %}
-            {% elif bid_event_status == "Bidding Not Available" %}
+            {% else %}
+            <p>Bidding closed</p>
+            {% endif %}
             <li class="list-group-item">Purchase Price: {{ artifact.purchase_price }}</li>
             <li class="list-group-item">
                 <h6>Purchase artifact:</h6>
@@ -66,9 +71,6 @@
                     </span>
                 </form>
             </li>
-            {% else %}
-            <p>Bidding closed</p>
-            {% endif %}
         </ul>
     </div>
 </div>
