@@ -4,6 +4,7 @@
 {% block page_heading %}Cart{% endblock %}
 
 {% block content %}
+{% if cart_items %}
 <div class="row justify-content-around no-gutters">
     {% for item in cart_items %}
     <div class="card col-xs-10 col-sm-6 col-md-4 col-lg-3">
@@ -13,10 +14,6 @@
                 <p class="card-text">Description: {{ item.artifact.description }}</p>
             </div>
             <ul class="list-group list-group-flush">
-                {% if item.bid %}
-                <li class="list-group-item">Bid Amount: {{ item.bid.bid_amount }}</li>
-                <li class="list-group-item">Quantity: {{ item.bid.bid_quantity }}</li>
-                {% else %}
                 <li class="list-group-item">Purchase Price: {{ item.artifact.purchase_price }}</li>
                 <li class="list-group-item">
                     <h6>Quantity:</h6>
@@ -28,7 +25,6 @@
                         </span>
                     </form>
                 </li>
-                {% endif %}
                 <li class="list-group-item">
                 <a href="{% url 'remove_item_from_cart' item.id %}" method="POST">Remove item</a>
                 </li>
@@ -36,9 +32,37 @@
         </div>
     {% endfor %}
 </div>
+{% endif %}
+
+{% if bid_cart_items %}
 <div class="row justify-content-around no-gutters">
+    {% for item in bid_cart_items %}
+    <div class="card col-xs-10 col-sm-6 col-md-4 col-lg-3">
+            <div class="card-img-top artifact" style="background-image: url('{{ MEDIA_URL }}{{ item.artifact.image }}')" alt="{{ item.artifact.name }}"></div>
+            <div class="card-body">
+                <h5 class="card-title">{{ item.artifact.name }}</h5>
+                <p class="card-text">Description: {{ item.artifact.description }}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Bid Amount: {{ item.bid_id }}</li>
+                <li class="list-group-item">Bid Amount: {{ item.bid_amount }}</li>
+                <li class="list-group-item">Quantity: {{ item.quantity }}</li>
+                <li class="list-group-item">
+                <a href="{% url 'remove_bid_from_cart' item.id %}" method="POST">Remove bid</a>
+                </li>
+            </ul>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="row justify-content-around no-gutters">
+    {% if total != 0 %}
     <p><h5>Total:</h5></p>
     <p><h6>{{ total }}</h6></p>
     <a href="{% url 'payment' %}" class="btn btn-success" role="button">Pay Now</a>
+    {% else %}
+    <p>There are no items in the cart</p>
+    {% endif %}
 </div>
 {% endblock %}
