@@ -25,10 +25,12 @@ class OrderLineItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=False)
     artifact = models.ForeignKey(Artifact, on_delete=models.CASCADE, null=False)
     quantity = models.IntegerField(blank=False)
+    bid = models.CharField(max_length=20, blank=True)
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, null=False)
     
     def __str__(self):
-        return "{0} - {1} at {2}".format(
+        return "{0} - {1} at {2} each".format(
             self.quantity,
             self.artifact.name,
-            self.artifact.purchase_price
+            self.unit_price
             ) 

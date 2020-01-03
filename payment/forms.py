@@ -7,8 +7,8 @@ class PaymentDetailsForm(forms.Form):
     security reasons, security dealt with by Stripe JavaScript.  This
     prevents info to be sent in plain text
     """
-    month_choices = [(i, i) for i in range(1, 13)]
-    year_choices = [(i, i) for i in range(2019, 2039)]
+    MONTH_CHOICES = [(i, i) for i in range(1, 13)]
+    YEAR_CHOICES = [(i, i) for i in range(2020, 2039)]
     
     credit_card_number = forms.CharField(
         label="Card number",
@@ -20,12 +20,12 @@ class PaymentDetailsForm(forms.Form):
         )
     expiry_month = forms.ChoiceField(
         label="Expiry month",
-        choices=month_choices,
+        choices=MONTH_CHOICES,
         required=False
         )
     expiry_year = forms.ChoiceField(
         label="Expiry year",
-        choices=year_choices,
+        choices=YEAR_CHOICES,
         required=False
         )
     stripe_id = forms.CharField(

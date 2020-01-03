@@ -6,15 +6,16 @@
 <script type="text/javascript">
     //<![CDATA[
     Stripe.publishableKey = '{{ publishable }}';
-    //]}>
+    //]]>
 </script>
 <script type="text/javascript" src="{% static 'js/stripe.js' %}"></script>
-{% endblock %}
+{% endblock head_js %}
 
 {% block page_title %}AH: Payment{% endblock %}
 {% block page_heading %}Payment{% endblock %}
 
 {% block content %}
+{% if cart_items %}
 <div class="row justify-content-around no-gutters">
     {% for item in cart_items %}
     <div class="card col-xs-10 col-sm-6 col-md-4 col-lg-3">
@@ -24,21 +25,41 @@
                 <p class="card-text">Description: {{ item.artifact.description }}</p>
             </div>
             <ul class="list-group list-group-flush">
-                {% if item.bid %}
-                <li class="list-group-item">Bid Amount: {{ item.bid.bid_amount }}</li>
-                {% else %}
                 <li class="list-group-item">Purchase Price: {{ item.artifact.purchase_price }}</li>
-                {% endif %}
+                <li class="list-group-item">Quantity: {{ item.quantity }}</li>
             </ul>
         </div>
     {% endfor %}
 </div>
+{% endif %}
+
+{% if bid_cart_items %}
+<div class="row justify-content-around no-gutters">
+    {% for item in bid_cart_items %}
+    <div class="card col-xs-10 col-sm-6 col-md-4 col-lg-3">
+            <div class="card-img-top artifact" style="background-image: url('{{ MEDIA_URL }}{{ item.artifact.image }}')" alt="{{ item.artifact.name }}"></div>
+            <div class="card-body">
+                <h5 class="card-title">{{ item.artifact.name }}</h5>
+                <p class="card-text">Description: {{ item.artifact.description }}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Bid Id: {{ item.bid_id }}</li>
+                <li class="list-group-item">Bid Amount: {{ item.bid_amount }}</li>
+                <li class="list-group-item">Quantity: {{ item.quantity }}</li>
+            </ul>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+
 <div class="row">
     <p>Total:</p>
     <p>{{ total }}</p>
 </div>
 
-<form role="form" method="post" id="payment-form" action="{% url 'payment' %}">
+<form role="form" method="POST" id="payment-form" action="{% url 'payment' %}">
     <legend>Checkout</legend>
 
     <div id="credit-card-errors" style="display: none;">
