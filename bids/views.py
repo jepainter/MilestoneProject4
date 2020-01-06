@@ -348,8 +348,27 @@ def view_user_bids(request):
         "datetime": timezone.now()
         }
     )
-    
 
+@login_required
+def archive_bid(request, id):
+    """
+    Function to archive bids from MyBids, to prevent display.
+    Info kept in Database
+    """
+    print("")
+    print("Archiving........")
+    
+    try:
+        bid = BidLineItem.objects.get(id=id)
+        print("Bid: " + str(bid))
+        bid.bid_archived = True
+        bid.save()
+    
+    except:
+        print("Error")
+    
+    return redirect(reverse("view_user_bids"))
+    
 def set_highest_bid(id):
     """
     Function to reset highest bid in an event
