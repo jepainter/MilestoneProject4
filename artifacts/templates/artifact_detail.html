@@ -17,76 +17,127 @@
     </div>
     <div class="card col-sm-10 col-md-4 col-lg-3">    
         <ul class="list-group list-group-flush">
-            <p>Bid Deadline: {{ bid_event_deadline }}</p>
+            <p>Bid Deadline: {{ bid_event.bid_event_deadline }}</p>
             <p>Time now: {{ datetime }}</p>
-            {% if bid_event_deadline > datetime %}
+            {% if bid_event.bid_event_deadline > datetime %}
             <p>Bidding open</p>
                 {% if user.is_authenticated %}
                     {% if bid_line_item %}
-                        {% for bid_detail in bid_line_item %}
-                        <form role="form" action="{% url 'adjust_bid' bid_detail.id %}" method="POST">
+                        <form role="form" action="{% url 'adjust_bid' bid_line_item.id %}" method="POST">
                             <label for="adjust_amount">Change Amount:</label>
-                            <input name="adjust_amount" type="number" min="{{ artifact.reserve_price }}" step="0.01" class="form-control" value="{{ bid_detail.bid_amount }}" placeholder="Adjust amount" required>
+                            <input name="adjust_amount" type="number" min="{{ artifact.reserve_price }}" step="0.01" class="form-control" value="{{ bid_line_item.bid_amount }}" placeholder="Adjust amount" required>
                             <label for="adjust_quantity">Change Quantity:</label>
-                            <input name="adjust_quantity" type="number" min="1" max="{{ bid_detail.bid_event.artifact.quantity }}" class="form-control" value="{{ bid_detail.bid_quantity }}" placeholder="Adjust quantity" required>
+                            <input name="adjust_quantity" type="number" min="1" max="{{ bid_line_item.bid_event.artifact.quantity }}" class="form-control" value="{{ bid_line_item.bid_quantity }}" placeholder="Adjust quantity" required>
                             {% csrf_token %}
                             <span class="input-group-btn">
                                 <button class="btn btn-success" type="submit">Adjust bid</button>
                             </span>
                         </form>
-                        <a href="{% url 'remove_bid' bid_detail.id %}" method="POST">Remove bid</a>
+                        <a href="{% url 'remove_bid' bid_line_item.id %}" method="POST">Remove bid</a>
                     
                         <p>You have already placed a bid, manage via MyBids</p>
                         <a href="{% url 'view_user_bids' %}">MyBids Button</a>
-                        {% endfor %}
+                        <li class="list-group-item">Purchase not possible, existing bid</li>
                     {% else %}
-                    <li class="list-group-item">Reserve Price: {{ artifact.reserve_price }}</li>
-                    <li class="list-group-item">
-                        <h6>Place a bid:</h6>
-                        <form action="{% url 'add_bid' artifact.id %}" method="POST">
-                            {% csrf_token %}
-                            <input name="bid_quantity" type="number" min="1" max="{{ artifact.quantity }}" class="form-control" placeholder="How many do you want..." required>
-                            <input name="bid_amount" type="number" min="{{ artifact.reserve_price }}" class="form-control" placeholder="What do you want to bid..." required>
-                            <span class="input-group-btn">
-                                <button class="btn btn-success" type="submit">Place bid</button>
-                            </span>
-                        </form>
-                    </li>
+                        {% if artifact.quantity != 0 %}
+                        <li class="list-group-item">Purchase Price: {{ artifact.purchase_price }}</li>
+                            {% if artifact_in_cart %}
+                                <form action="{% url 'adjust_cart' artifact.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <input name="quantity" type="number" min="1" max="{{ artifact.quantity }}" class="form-control" value="{{ artifact_in_cart.artifact_quantity }}" placeholder="How many do you want..." required>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-success" type="submit">Adjust cart</button>
+                                    </span>
+                                </form>
+                                <li class="list-group-item">
+                                    <a href="{% url 'remove_item_from_cart' artifact.id %}" method="POST">Remove item</a>
+                                </li>
+                            {% else %}
+                            <li class="list-group-item">Reserve Price: {{ artifact.reserve_price }}</li>
+                            <li class="list-group-item">
+                                <h6>Place a bid:</h6>
+                                <form action="{% url 'add_bid' artifact.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <input name="bid_quantity" type="number" min="1" max="{{ artifact.quantity }}" class="form-control" placeholder="How many do you want..." required>
+                                    <input name="bid_amount" type="number" min="{{ artifact.reserve_price }}" class="form-control" placeholder="What do you want to bid..." required>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-success" type="submit">Place bid</button>
+                                    </span>
+                                </form>
+                            </li>
+                            <li class="list-group-item">-- OR --</li>
+                            <li class="list-group-item">Purchase Price: {{ artifact.purchase_price }}</li>
+                            <li class="list-group-item">
+                                <h6>Purchase artifact:</h6>
+                                <form action="{% url 'add_to_cart' artifact.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <input name="quantity" type="number" min="1" max="{{ artifact.quantity }}" class="form-control" placeholder="How many do you want..." required>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-success" type="submit">Add to cart</button>
+                                    </span>
+                                </form>
+                            </li>
+                            {% endif %}
+                        {% else %}
+                        <li class="list-group-item">
+                            <p>Item SOLD OUT!</p>
+                        </li>
+                        {% endif %}
                     {% endif %}
                 {% else %}
-                <p>You need to log in first</p>
-                <a href="{% url 'login' %}">Log in</a>
+                    {% if artifact.quantity != 0 %}
+                    <p>You need to log in first</p>
+                    <a href="{% url 'login' %}">Log in</a>
+                    <li class="list-group-item">Purchase Price: {{ artifact.purchase_price }}</li>
+                    <li class="list-group-item">
+                        <h6>Purchase artifact:</h6>
+                        {% if artifact_in_cart %}
+                            <form action="{% url 'adjust_cart' artifact.id %}" method="POST">
+                                {% csrf_token %}
+                                <input name="quantity" type="number" min="1" max="{{ artifact.quantity }}" class="form-control" value="{{ artifact_in_cart.artifact_quantity }}" placeholder="How many do you want..." required>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-success" type="submit">Adjust cart</button>
+                                </span>
+                            </form>
+                            <li class="list-group-item">
+                                <a href="{% url 'remove_item_from_cart' artifact.id %}" method="POST">Remove item</a>
+                            </li>
+                        {% else %}
+                            <form action="{% url 'add_to_cart' artifact.id %}" method="POST">
+                                {% csrf_token %}
+                                <input name="quantity" type="number" min="1" max="{{ artifact.quantity }}" class="form-control" placeholder="How many do you want..." required>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-success" type="submit">Add to cart</button>
+                                </span>
+                            </form>
+                        {% endif %}
+                    </li>
+                    {% else %}
+                    <li class="list-group-item">
+                        <p>Item SOLD OUT!</p>
+                    </li>
+                    {% endif %}
                 {% endif %}
             {% else %}
-            <p>Bidding closed</p>
+                <p>Bidding / Purchasing closed</p>
             {% endif %}
-            <li class="list-group-item">Purchase Price: {{ artifact.purchase_price }}</li>
-            <li class="list-group-item">
-                <h6>Purchase artifact:</h6>
-                <form action="{% url 'add_to_cart' artifact.id %}" method="POST">
-                    {% csrf_token %}
-                    <input name="quantity" type="number" min="1" max="{{ artifact.quantity }}" class="form-control" placeholder="How many do you want..." required>
-                    <span class="input-group-btn">
-                        <button class="btn btn-success" type="submit">Add to cart</button>
-                    </span>
-                </form>
-            </li>
+            <p>Cart: {{ artifact_in_cart }}</p>
         </ul>
     </div>
 </div>
 <div class="row no-gutters">         
     <div class="card col-xs-10 col-md-6">
         <p>History:</p>
-        {% if events %}
-            {% for historyevent in events %}
-            <p>{{ historyevent.event_year }} {{ historyevent.event_era }}</p>
-            <p>{{ historyevent.event_description }}</p>
+        {% if history_events %}
+            {% for history_event in history_events %}
+            <p>{{ history_event.event_year }} {{ history_event.event_era }}</p>
+            <p>{{ history_event.event_description }}</p>
             {% endfor %}
         {% else %}
             <p>No history recorded for this artifact</p>
         {% endif %}
         {% if request.user.is_superuser %}
-            <p>Add history button</p>
+            <a href="{% url 'view_history' artifact.id %}">View history</a>
         {% endif %}
     </div>
 </div>

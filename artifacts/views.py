@@ -21,23 +21,28 @@ def view_artifact(request, id):
     """
     
     #artifact = Artifact.objects.filter(id=id)
-    events = HistoryEvent.objects.filter(history_id__artifact=id)
+    history_events = HistoryEvent.objects.filter(history_id__artifact=id)
     
     try:
-        bid = BidEvent.objects.get(artifact=id)
-        bid_event_status = bid.bid_event_status
-        bid_event_deadline = bid.bid_event_deadline
-        artifact = bid.artifact
+        bid_event = BidEvent.objects.get(artifact=id)
+       # bid_event_status = bid_event.bid_event_status
+        #bid_event_deadline = bid_event.bid_event_deadline
+        artifact = bid_event.artifact
         print("Checking bid detail")
-        print(bid)
+        print(bid_event)
     
     except:
-        print("No bid event exists")
+        print("No bid event exists2")
         bid_event_status = "Bidding Closed"
+        bid_event = ""
         artifact = Artifact.objects.get(id=id)
         
     
-    bid_line_item = BidLineItem.objects.filter(bid_user=request.user.id).filter(bid_event__artifact=id)
+    
+    try:
+        bid_line_item = BidLineItem.objects.filter(bid_user=request.user.id).get(bid_event__artifact=id)
+    except:
+        bid_line_item = ""
     
     if bid_line_item:
         print("Bid placed by user")
@@ -46,6 +51,19 @@ def view_artifact(request, id):
         print("No bid for user")
         print(bid_line_item)
         
+    cart = request.session.get("cart", {})
+    print("Cart: "+ str(cart))
+    
+    artifact_in_cart = {}
+    for artifact_id, artifact_quantity in cart.items():
+        if artifact_id == id:
+            artifact_in_cart = {
+                "artifact_id" : artifact_id,
+                "artifact_quantity": artifact_quantity,
+                }
+    
+    print("Artifact in cart : " + str(artifact_in_cart))
+    
     #    return render(request, "artifact_detail.html", {
     #    "artifact": artifact,
     #    "bid_event_status": bid_event_status,
@@ -89,9 +107,10 @@ def view_artifact(request, id):
     
     return render(request, "artifact_detail.html", {
         "artifact": artifact,
-        "bid_event_status": bid_event_status,
-        "bid_event_deadline": bid_event_deadline,
+        "bid_event": bid_event,
+     #   "bid_event_deadline": bid_event_deadline,
         "datetime": timezone.now(),
-        "events": events,
+        "history_events": history_events,
         "bid_line_item" : bid_line_item,
+        "artifact_in_cart": artifact_in_cart
         })
