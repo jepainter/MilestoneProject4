@@ -16,14 +16,15 @@ class BidEvent(models.Model):
     
     
     artifact = models.ForeignKey(Artifact, on_delete=models.CASCADE, null=False)
-    highest_bid = models.DecimalField(max_digits=10, decimal_places=2)
-    bid_event_status = models.CharField(max_length=50, choices=BID_STATUS_CHOICES, default="Bidding Not Available")
+    #highest_bid = models.DecimalField(max_digits=10, decimal_places=2)
+    #bid_event_status = models.CharField(max_length=50, choices=BID_STATUS_CHOICES, default="Bidding Not Available")
+    artifact_purchased = models.BooleanField(null=False, default=False)
     bid_event_deadline = models.DateTimeField(null=True)
     
     def __str__(self):
-        return "Bid Event Id: {0} Bid Status: {1} for Artifact Id: {2} - Artifact Name: {3} - Reserve Price: {4}".format(
+        return "Bid Event Id: {0} for Artifact Id: {1} - Artifact Name: {2} - Reserve Price: {3}".format(
             self.id,
-            self.bid_event_status,
+         #   self.bid_event_status,
             self.artifact.id,
             self.artifact.name,
             self.artifact.reserve_price,

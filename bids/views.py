@@ -30,7 +30,7 @@ def view_bids(request, id):
         print("Checking bid detail")
         print(bid_event.bid_event_status)
     except:
-        print("No bid event exists")
+        print("No bid event exists1")
         bid_event_status = "Bidding Closed"
         bid_event = ""
         bids = ""
