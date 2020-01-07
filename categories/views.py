@@ -14,6 +14,8 @@ def all_categories(request):
 def view_category(request, id):
     """
     View to get one category and associated artifacts and render html
+    
+    CHANGE function to only search artifacts and not categories
     """
     
     category = Category.objects.filter(id=id)
@@ -31,4 +33,12 @@ def view_category(request, id):
     
     print("Artifacts: " + str(artifacts))
     
-    return render(request, "artifacts.html", {"artifacts": artifacts, "categories": category})
+    return render(request, "artifacts.html", {"artifacts": artifacts})
+    
+def add_category(request):
+    """
+    Function to add a category in the database if the user is a superuser
+    """
+    
+    
+    
