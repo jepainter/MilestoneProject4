@@ -73,12 +73,9 @@ def remove_item_from_cart(request, id):
     """
     
     cart = request.session.get("cart", {})
-    #bid_cart = request.session.get("bid_cart", {})
-    #bid_cart.pop(id)
     cart.pop(id)
     
     request.session["cart"] = cart
-    #request.session["bid_cart"] = bid_cart
     
     return redirect(reverse("view_cart"))
 
