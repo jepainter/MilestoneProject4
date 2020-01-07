@@ -7,19 +7,14 @@ def cart_contents(request):
     Cart contents for items ready to be purchased
     """
     
-    cart = request.session.get("cart", {})
-    bid_cart = request.session.get("bid_cart", {})
-    cart_items = []
-    bid_cart_items = []
     total = 0
     artifact_count = 0
     
+    # Primary cart for outright purchase of items
+    cart = request.session.get("cart", {})
+    cart_items = []
+    
     for id, quantity in cart.items():
-  #      print(id)
-  #      print(cart[id])
-  #      print(cart[id]['price'])
-  #      print(cart[id]['quantity'])
-  #      print(cart[id]['bid'])
         artifact = get_object_or_404(Artifact, pk=id)
         total += quantity * artifact.purchase_price
         artifact_count += quantity
@@ -27,22 +22,14 @@ def cart_contents(request):
             "id": id,
             "quantity": quantity,
             "artifact": artifact,
-#            "price": cart[id]['price'], 
         })
-            
-    print("Cart Items: " + str(cart_items))
     
-#    cart_second = request.session.get("cart_second", {})
-#    cart_items_two = []
-  #  print("Cart second: " + str(cart_second))
+    # Secondary cart for managing successful bids
+    bid_cart = request.session.get("bid_cart", {})
+    bid_cart_items = []
     
     for id, bid_id in bid_cart.items():
-  #      print(id)
-  #      print(cart_second[id])
-  #      print(cart_second[id]['price'])
-  #      print(cart_second[id]['quantity'])
         bid = BidLineItem.objects.get(pk=bid_id)    
-        #artifact = get_object_or_404(Artifact, pk=id)
         total += bid.bid_quantity * bid.bid_amount
         artifact_count += bid.bid_quantity
         bid_cart_items.append({
@@ -52,9 +39,6 @@ def cart_contents(request):
             "artifact": bid.bid_event.artifact,
             "bid_amount" : bid.bid_amount,
         })
-    
-    print("Bid Cart Items: " + str(bid_cart_items))
-    
         
     return {
         "cart_items": cart_items,
