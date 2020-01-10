@@ -24,9 +24,12 @@
         <p>Bidder: {{ bid.bid_user.username }}</p>
         <p>Bid Amount: {{ bid.bid_amount }}</p>
         <p>Bid Quantity: {{ bid.bid_quantity }}</p>
+        {% if bid.bid_note != "No note" %}
+            <p>Note: {{ bid.bid_note }}</p>
+        {% endif %}
         <form role="form" action="{% url 'adjust_bid' bid.id %}" method="POST">
             <label for="adjust_amount">Change Amount:</label>
-            <input name="adjust_amount" type="number" min="0.00" step="0.01" class="form-control" value="{{ bid.bid_amount }}" placeholder="Adjust amount">
+            <input name="adjust_amount" type="number" min="{{ bid.bid_event.artifact.reserve_price }}" step="0.01" class="form-control" value="{{ bid.bid_amount }}" placeholder="Adjust amount">
             <label for="adjust_quantity">Change Quantity:</label>
             <input name="adjust_quantity" type="number" min="0" max="{{ bid.bid_event.artifact.quantity }}" class="form-control" value="{{ bid.bid_quantity }}" placeholder="Adjust quantity">
             {% csrf_token %}
@@ -57,6 +60,9 @@
         <p>Highest Bid: {{ bid.bid_highest }}</p>
         <p>Bid Amount: {{ bid.bid_amount }}</p>
         <p>Bid Quantity: {{ bid.bid_quantity }}</p>
+        {% if bid.bid_note != "No note" %}
+            <p>Note: {{ bid.bid_note }}</p>
+        {% endif %}
         <h6>Pay for artifact:</h6>
         <form action="{% url 'add_bid_to_cart' bid.id %}" method="POST">
             {% csrf_token %}
@@ -68,7 +74,6 @@
     {% endif %}
     {% endfor %}
 </div>
-
 
 <div class="row no-gutters">
     <h3>Paid bids</h3>
