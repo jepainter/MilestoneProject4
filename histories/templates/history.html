@@ -8,12 +8,12 @@
     <div class="col-10 col-md-8">
         <div class="row">
             <div class="col-12">
-                <p>Artifact Name: {{ artifact_name }}</p>     
+                <p>Artifact Name: {{ historyartifact_name }}</p>     
                 <p>Artifact ID: {{ artifact_id }}</p>
-                <p>History ID: {{ history_id }}</p>
+                <p>History ID: {{ artifact_history.id }}</p>
                 <p>Notable Events:</p>
                 
-                {% for event in events %}
+                {% for event in history_events %}
                 <h5>Year: {{ event.event_year }}</h5>
                 <p>Era: {{ event.event_era }}</p>
                 <p>Description: {{ event.event_description }}</p>
@@ -21,8 +21,10 @@
             </div>
         </div>
     </div>
+    
+    {% if request.user.is_superuser or owner == True %}
     <div class="col-10 col-md-4">  
-        <form role="form" method="POST" id="event-form" action="{% url 'add_history_event' id=artifact_id %}">
+        <form role="form" method="POST" id="event-form" action="{% url 'add_history_event' artifact_id %}">
             <legend>Add Event for {{ id }}</legend>
         
             <div class="form-group col-md-6">
@@ -30,7 +32,7 @@
                 <label for="event_year">Event year:</label>{{ event_form.event_year }}
                 <label for="event_era">Event era:</label>{{ event_form.event_era }}
                 <label for="event_description">Event description: </label>{{ event_form.event_description }}
-                <input type="hidden" name="history_id" value="{{ history_id }}">
+                <input type="hidden" name="history_id" value="{{ artifact_history.id }}">
             </div>
             
             {% csrf_token %}
@@ -39,5 +41,6 @@
             </div>
         </form>
     </div>
+    {% endif %}
 </div>
 {% endblock %}
