@@ -39,13 +39,14 @@ class HistoryEvent(models.Model):
     history_id = models.ForeignKey(
         History,
         on_delete=models.CASCADE,
-        null=False
+        null=False,
         )
     event_year = models.IntegerField(blank=False)
     event_era = models.CharField(
-        max_length=50,
+        max_length=30,
         choices=ERA_CHOICES,
-        default="Unassigned"
+        default="Unassigned",
+        blank=False,
         )
     event_description = models.TextField(blank=False)
     

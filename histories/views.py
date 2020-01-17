@@ -15,7 +15,8 @@ def view_history(request, id):
     
     event_form = HistoryEventForm()
     history_events = HistoryEvent.objects.filter(history_id__artifact=id)
-    ownership = OrderLineItem.objects.filter(artifact=id).filter(owner_id=request.user.id).first()
+    ownership = OrderLineItem.objects.filter(
+        artifact=id).filter(owner_id=request.user.id).first()
     
     if ownership != None:
         owner = True
@@ -23,7 +24,8 @@ def view_history(request, id):
         owner = False
     
     try:
-        artifact_history = History.objects.get(artifact=id)
+        artifact_history = History.objects.filter(artifact=id).first()
+        artifact = artifact_history.artifact
     except:
         artifact_history = ""
         try:
@@ -37,6 +39,7 @@ def view_history(request, id):
     
     return render(request, "history.html", {
         "artifact_id": id,
+        "artifact": artifact,
         "history_events": history_events,
         "artifact_history": artifact_history,
         "event_form": event_form,
@@ -47,7 +50,8 @@ def view_history(request, id):
 @login_required
 def add_history_event(request, id):
     """
-    View to add a history event to an artifact, redirect back to view history.
+    View to add a history event to an artifact, redirect back to 
+    view history.
     """
     
     if request.method == "POST":
@@ -58,7 +62,7 @@ def add_history_event(request, id):
             
             try:
                 history_event.history_id = History.objects.get(
-                    id=request.POST["history_id"])
+                    artifact=id)
             except:
                 history_event.history_id = History.objects.create(
                     artifact=Artifact.objects.get(id=id))
