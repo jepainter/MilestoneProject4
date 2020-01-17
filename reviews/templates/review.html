@@ -1,51 +1,60 @@
 {% extends "base.html" %}
 {% load static from staticfiles %}
+{% load bootstrap_tags %}
 {% block page_title %}AH: Review{% endblock %}
-{% block page_heading %}Add Review{% endblock %}
+{% block page_heading %}Review{% endblock %}
 
 {% block content %}
-<div class="row justify-content-around">
-    <div class="col-10 col-md-8">
-        <div class="row">
-            <div class="col-12">
-                <p>Artifact Name: {{ artifact.name }}</p>     
-                <p>Artifact ID: {{ artifact.id }}</p>
-            </div>
+<div class="row justify-content-around no-gutters">
+    <div class="col-12 col-md-7 col-lg-8 card-padding">
+        <div class="card bg-light border-secondary box-shadow">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item bg-light">
+                    <h3>{{ artifact.name }}</h3>     
+                    <h4>Reviews</h4>
+                </li>
+                <div class="row no-gutters bg-light-grey">
+                {% if reviews %}
+                    {% for review in reviews %}
+                    <div class="col-12 col-sm-6 card-padding">
+                        <div class="card bg-light border-secondary h-100 box-shadow">
+                            <li class="list-group-item bg-light">
+                                <p>Review: {{ review.review_detail }}</p>
+                                <p>{{ review.review_owner_name }} on {{ review.review_date }}</p>
+                            </li>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="col-12 card-padding">
+                    <div class="card bg-light border-secondary h-100 box-shadow">
+                        <li class="list-group-item bg-light">No reviews for this artifact</li>
+                    </div>
+                </div>
+                {% endif %}
+                </div>
+            </ul>
         </div>
     </div>
-</div>
-    
-<div class="row no-gutters">         
-    <div class="card col-xs-10 col-md-6">
-        <p>Reviews:</p>
-        {% if reviews %}
-            {% for review in reviews %}
-            <p>Review Id: {{ review.review_id }}</p>
-            <p>Review Date: {{ review.review_date }}</p>
-            <p>Review: {{ review.review_detail }}</p>
-            <p>Review Owner: {{ review.review_owner_name }}</p>
-            <p>Review Owner ID: {{ review.review_owner_id }}</p>
-            {% endfor %}
-        {% else %}
-            <p>No reviews recorded for this artifact</p>
-        {% endif %}
-    </div>
-    
-    {% if owner == True and reviewed == False %}
-    <div class="col-10 col-md-4">  
-        <form role="form" method="POST" id="review-form" action="{% url 'add_review' artifact.id %}">
-            <legend>Add review for {{ id }}</legend>
-        
-            <div class="form-group col-md-6">
-                <h5>Review details:</h5>
-                {{ review_form }}
+    {% if user.is_superuser %}
+    <div class="col-12 col-md-5 col-lg-4 card-padding">
+        <div class="card bg-light-grey border-secondary box-shadow"> 
+            <li class="list-group-item bg-light">
+                <h4>Add Review</h4>
+            </li>
+            <div class="col-12 card-padding">
+                <div class="card bg-light border-secondary h-100 box-shadow">
+                    <li class="list-group-item bg-light">
+                        <form role="form" method="POST" id="review-form" action="{% url 'add_review' artifact.id %}">
+                            <h5>Review details:</h5>
+                            {{ review_form | as_bootstrap }}
+                            {% csrf_token %}
+                            <input class="btn btn-success btn-lg box-shadow" id="add_review_btn" name="commit" type="submit" value="Add Review">
+                        </form>
+                    </li>
+                </div>
             </div>
-            
-            {% csrf_token %}
-            <div class="form-group col-md-12">
-                <input class=" btn btn-primary" id="add_review_btn" name="commit" type="submit" value="Add Review">
-            </div>
-        </form>
+        </div>
     </div>
     {% endif %}
 </div>

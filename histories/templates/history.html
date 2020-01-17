@@ -13,34 +13,48 @@
                     <h3>{{ artifact.name }}</h3>     
                     <h4>Notable Events</h4>
                 </li>
+                <div class="row no-gutters bg-light-grey">
                 {% if history_events %}
-                    <div class="history-spacing">
-                    {% for history_event in history_events %}
-                    <div class="history-date-item" data-dates="{{ history_event.event_year }} {{ history_event.event_era }}:">
-                        <p>{{ history_event.event_description }}</p>
-                    </div>
-                    {% endfor %}
+                    <div class="col-12 card-padding">
+                        <div class="card bg-light border-secondary h-100 box-shadow">
+                            <div class="history-spacing">
+                            {% for history_event in history_events %}
+                                <div class="history-date-item" data-dates="{{ history_event.event_year }} {{ history_event.event_era }}:">
+                                    <p>{{ history_event.event_description }}</p>
+                                </div>
+                            {% endfor %}
+                            </div>
+                        </div>
                     </div>
                 {% else %}
-                    <li class="list-group-item bg-light">No history recorded for this artifact</li>
+                    <div class="col-12 card-padding">
+                        <div class="card bg-light border-secondary h-100 box-shadow">
+                            <li class="list-group-item bg-light">No history recorded for this artifact</li>
+                        </div>
+                    </div>
                 {% endif %}
+                </div>
             </ul>
         </div>
     </div>
     {% if request.user.is_superuser or owner == True %}
     <div class="col-12 col-md-5 col-lg-4 card-padding">
-        <div class="card bg-light border-secondary box-shadow"> 
+        <div class="card bg-light-grey border-secondary box-shadow"> 
             <li class="list-group-item bg-light">
                 <h4>Add Event</h4>
             </li>
-            <li class="list-group-item bg-light">
-                <form role="form" method="POST" id="event-form" action="{% url 'add_history_event' artifact_id %}">
-                    <h5>History event details:</h5>
-                    {{ event_form | as_bootstrap }}
-                    {% csrf_token %}
-                    <input class="btn btn-success btn-lg box-shadow" id="add_history_btn" type="submit" value="Add Event">
-                </form>
-            </li>
+            <div class="col-12 card-padding">
+                <div class="card bg-light border-secondary h-100 box-shadow">
+                    <li class="list-group-item bg-light">
+                        <form role="form" method="POST" id="event-form" action="{% url 'add_history_event' artifact_id %}">
+                            <h5>History event details:</h5>
+                            {{ event_form | as_bootstrap }}
+                            {% csrf_token %}
+                            <input class="btn btn-success btn-lg box-shadow" id="add_history_btn" type="submit" value="Add Event">
+                        </form>
+                    </li>
+                </div>
+            </div>
         </div>
     </div>
     {% endif %}
