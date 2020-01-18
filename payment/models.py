@@ -26,7 +26,7 @@ class OrderLineItem(models.Model):
     artifact = models.ForeignKey(Artifact, on_delete=models.CASCADE, null=False)
     quantity = models.IntegerField(blank=False)
     bid = models.CharField(max_length=20, blank=True)
-    owner_id = models.CharField(max_length=10, blank=False, default="1")
+    owner_id = models.CharField(max_length=10, blank=False)
     unit_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, null=False)
     
     def __str__(self):

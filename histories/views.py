@@ -68,6 +68,7 @@ def add_history_event(request, id):
                     artifact=Artifact.objects.get(id=id))
         
             history_event.save()
+            
             messages.success(
                 request,
                 "You have successfully added a history event."

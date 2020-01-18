@@ -36,7 +36,7 @@
             </ul>
         </div>
     </div>
-    {% if user.is_superuser %}
+    {% if owner == True and reviewed == False %}
     <div class="col-12 col-md-5 col-lg-4 card-padding">
         <div class="card bg-light-grey border-secondary box-shadow"> 
             <li class="list-group-item bg-light">
