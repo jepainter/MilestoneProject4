@@ -151,7 +151,6 @@ def remove_bid(request, id):
     
     try:
         bid_line_item = BidLineItem.objects.get(id=id)
-
         if bid_time < bid_line_item.bid_event.bid_event_deadline:
             bid_line_item.delete()
             messages.success(
@@ -163,10 +162,8 @@ def remove_bid(request, id):
                 request,
                 "Sorry, you cannot remove a bid after the bidding is closed."
                 )
-        
         set_highest_bid(bid_line_item.bid_event.id)
-        
-        return redirect("view_bids", id=bid_line_item.bid_event.artifact_id)
+        return redirect("view_user_bids")
         
     except:
         messages.error(
@@ -239,11 +236,13 @@ def set_highest_bid(id):
     
     new_highest_bid = BidLineItem.objects.filter(
         bid_event=id).order_by('-bid_amount').first()
-    if new_highest_bid.bid_event.artifact.quantity == 0:
-        pass
-    else:
-        new_highest_bid.bid_highest = True
-        new_highest_bid.save()
+    
+    if new_highest_bid != None:
+        if new_highest_bid.bid_event.artifact.quantity == 0:
+            pass
+        else:
+            new_highest_bid.bid_highest = True
+            new_highest_bid.save()
     
     return True
 

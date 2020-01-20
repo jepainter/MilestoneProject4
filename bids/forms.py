@@ -1,11 +1,12 @@
 from django import forms
-#from bids.models import BidEvent
+from bids.models import BidLineItem
 
 class BidDetailsForm(forms.Form):
     """
-    Form for capturing a bid 
-    related to a specific artifact 
+    Form for capturing a bid related to a specific artifact 
     by a specific user. 
+    
+    DELETE FORMS NOT BEING USED
     """
     
     bid_amount = forms.DecimalField(
@@ -21,4 +22,3 @@ class BidDetailsForm(forms.Form):
         min_value=1,
         required=True,
         )
-    

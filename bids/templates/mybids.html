@@ -1,129 +1,215 @@
 {% extends "base.html" %}
 {% load static from staticfiles %}
 {% block page_title %}AH: MyBids{% endblock %}
-{% block page_heading %}My Bids{% endblock %}
+{% block page_heading %}
+<div class="row no-gutters align-items-center">
+    <span>
+        <img class="page-heading-img" src="{% static 'logos/ah_logo_small.png' %}" alt="Image for Artifact Hunters Logo"> 
+    </span>
+    <span class="align-middle">
+        <h1 class="page-heading-padding">My Bids</h1>
+    </span>
+</div>
+{% endblock %}
 
 {% block content %}
+{% if bids %}
+<div class="row justify-content-around no-gutters">         
+    <div class="col-12 card-padding-top-bottom">
+        <div class="card border-secondary box-shadow">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item bg-light">
+                    <h4>Open Bids</h4>
+                </li>
+                <div class="row no-gutters bg-light-grey">
+                    {% for bid in bids %}
+                    {% if bid.bid_event.bid_event_deadline > datetime %}
+                    <div class="col-12 col-md-6 col-lg-4 col-xl-3 card-padding">
+                        <div class="card bg-light border-secondary h-100 box-shadow">
+                            <ul class="list-group list-group-flush">
+                                <a class="card-link" href="{% url 'view_artifact' bid.bid_event.artifact.id %}">
+                                    <img class="card-img-top bg-grey" src="{{ MEDIA_URL }}{{ bid.bid_event.artifact.image }}" alt="Image for {{ bid.bid_event.artifact.name }}">
+                                    <li class="list-group-item bg-light">
+                                        <h4>{{ bid.bid_event.artifact.name }}</h4>
+                                        <p>Current Bid Amount: {{ bid.bid_amount }}</p>
+                                        <p>Current Bid Quantity: {{ bid.bid_quantity }}</p>
+                                        {% if bid.bid_note != "No note" %}
+                                            <p>Note: {{ bid.bid_note }}</p>
+                                        {% endif %}
+                                    </li>
+                                </a>
+                                <li class="list-group-item bg-light">
+                                    <form role="form" action="{% url 'adjust_bid' bid.id %}" method="POST">
+                                        <label for="adjust_amount">Change Amount:</label>
+                                        <input name="adjust_amount" type="number" min="{{ bid.bid_event.artifact.reserve_price }}" step="0.01" class="form-control" value="{{ bid.bid_amount }}" placeholder="Adjust amount..." required>
+                                        <label for="adjust_quantity">Change Quantity:</label>
+                                        <input name="adjust_quantity" type="number" min="1" max="{{ bid.bid_event.artifact.quantity }}" class="form-control" value="{{ bid.bid_quantity }}" placeholder="Adjust quantity" required>
+                                        {% csrf_token %}
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-warning btn-margin box-shadow" type="submit">Adjust bid</button>
+                                        </span>
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-danger btn-margin box-shadow" href="{% url 'remove_bid' bid.id %}" method="POST">Remove bid</a>
+                                        </span>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-around no-gutters">         
+    <div class="col-12 card-padding-top-bottom">
+        <div class="card border-secondary box-shadow">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item bg-light">
+                    <h4>Successful Bids</h4>
+                </li>
+                <div class="row no-gutters bg-light-grey">
+                    {% for bid in bids %}
+                    {% if bid.bid_event.bid_event_deadline <= datetime %}
+                    {% if bid.bid_highest == True %}
+                    {% if bid.bid_paid == False %}
+                    <div class="col-12 col-md-6 col-lg-4 col-xl-3 card-padding">
+                        <div class="card bg-light border-secondary h-100 box-shadow">
+                            <ul class="list-group list-group-flush">
+                                <a class="card-link" href="{% url 'view_artifact' bid.bid_event.artifact.id %}">
+                                    <img class="card-img-top bg-grey" src="{{ MEDIA_URL }}{{ bid.bid_event.artifact.image }}" alt="Image for {{ bid.bid_event.artifact.name }}">
+                                    <li class="list-group-item bg-light">
+                                        <h4>{{ bid.bid_event.artifact.name }}</h4>
+                                        <p>Highest Bid: {{ bid.bid_highest }}</p>
+                                        <p>Bid Amount: {{ bid.bid_amount }}</p>
+                                        <p>Bid Quantity: {{ bid.bid_quantity }}</p>
+                                        {% if bid.bid_note != "No note" %}
+                                            <p>Note: {{ bid.bid_note }}</p>
+                                        {% endif %}
+                                    </li>
+                                </a>
+                                <li class="list-group-item bg-light">
+                                    <h6>Pay for artifact:</h6>
+                                    <form action="{% url 'add_bid_to_cart' bid.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button class="btn btn-success btn-margin box-shadow" type="submit">Add bid to cart</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-around no-gutters">         
+    <div class="col-12 card-padding-top-bottom">
+        <div class="card border-secondary box-shadow">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item bg-light">
+                    <h4>Paid Bids</h4>
+                </li>
+                <div class="row no-gutters bg-light-grey">
+                    {% for bid in bids %}
+                    {% if bid.bid_event.bid_event_deadline <= datetime %}
+                    {% if bid.bid_highest == True %}
+                    {% if bid.bid_paid == True %}
+                    {% if bid.bid_archived == False %}
+                    <div class="col-12 col-md-6 col-lg-4 col-xl-3 card-padding">
+                        <div class="card bg-light border-secondary h-100 box-shadow">
+                            <ul class="list-group list-group-flush">
+                                <a class="card-link" href="{% url 'view_artifact' bid.bid_event.artifact.id %}">
+                                    <img class="card-img-top bg-grey" src="{{ MEDIA_URL }}{{ bid.bid_event.artifact.image }}" alt="Image for {{ bid.bid_event.artifact.name }}">
+                                    <li class="list-group-item bg-light">
+                                        <h4>{{ bid.bid_event.artifact.name }}</h4>
+                                        <p>Bid Amount: {{ bid.bid_amount }}</p>
+                                        <p>Bid Quantity: {{ bid.bid_quantity }}</p>
+                                        {% if bid.bid_note != "No note" %}
+                                            <p>Note: {{ bid.bid_note }}</p>
+                                        {% endif %}
+                                    </li>
+                                </a>
+                                <li class="list-group-item bg-light">
+                                    <a class="btn btn-secondary btn-margin box-shadow" href="{% url 'archive_bid' bid.id %}" method="POST">Archive bid</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-around no-gutters">         
+    <div class="col-12 card-padding-top-bottom">
+        <div class="card border-secondary box-shadow">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item bg-light">
+                    <h4>Unsuccessful Bids</h4>
+                </li>
+                <div class="row no-gutters bg-light-grey">
+                    {% for bid in bids %}
+                    {% if bid.bid_event.bid_event_deadline <= datetime %}
+                    {% if bid.bid_highest == False %}
+                    {% if bid.bid_archived == False %}
+                    <div class="col-12 col-md-6 col-lg-4 col-xl-3 card-padding">
+                        <div class="card bg-light border-secondary h-100 box-shadow">
+                            <ul class="list-group list-group-flush">
+                                <a class="card-link" href="{% url 'view_artifact' bid.bid_event.artifact.id %}">
+                                    <img class="card-img-top bg-grey" src="{{ MEDIA_URL }}{{ bid.bid_event.artifact.image }}" alt="Image for {{ bid.bid_event.artifact.name }}">
+                                    <li class="list-group-item bg-light">
+                                        <h4>{{ bid.bid_event.artifact.name }}</h4>
+                                        <p>Bid Amount: {{ bid.bid_amount }}</p>
+                                        <p>Bid Quantity: {{ bid.bid_quantity }}</p>
+                                    </li>
+                                </a>
+                                <li class="list-group-item bg-light">
+                                    <a class="btn btn-secondary btn-margin box-shadow" href="{% url 'archive_bid' bid.id %}" method="POST">Archive bid</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </ul>
+        </div>
+    </div>
+</div>
+{% else %}
 <div class="row justify-content-around no-gutters">
-    <p>User ID: {{ user.id }}</p>
-    <p>User Name: {{ user.username }}</p>
-    <p>User Email: {{ user.email }}</p>
-</div>
-
-<div class="row no-gutters">
-    <h3>Open bids</h3>
-</div>
-<div class="row">
-    {% for bid in bids %}
-    {% if bid.bid_event.bid_event_deadline > datetime %}
-    <div class="col-3">
-        <p>Bid ID: {{ bid.id }}</p>
-        <p>Bid Event ID: {{ bid.bid_event.id }}</p>
-        <p>Bid Status: {{ bid.bid_event.bid_event_status }}</p>
-        <p>Artifact Name: {{ bid.bid_event.artifact.name }} </p>
-        <p>Bidder: {{ bid.bid_user.username }}</p>
-        <p>Bid Amount: {{ bid.bid_amount }}</p>
-        <p>Bid Quantity: {{ bid.bid_quantity }}</p>
-        {% if bid.bid_note != "No note" %}
-            <p>Note: {{ bid.bid_note }}</p>
-        {% endif %}
-        <form role="form" action="{% url 'adjust_bid' bid.id %}" method="POST">
-            <label for="adjust_amount">Change Amount:</label>
-            <input name="adjust_amount" type="number" min="{{ bid.bid_event.artifact.reserve_price }}" step="0.01" class="form-control" value="{{ bid.bid_amount }}" placeholder="Adjust amount">
-            <label for="adjust_quantity">Change Quantity:</label>
-            <input name="adjust_quantity" type="number" min="0" max="{{ bid.bid_event.artifact.quantity }}" class="form-control" value="{{ bid.bid_quantity }}" placeholder="Adjust quantity">
-            {% csrf_token %}
-            <span class="input-group-btn">
-                <button class="btn btn-success" type="submit">Adjust bid</button>
-            </span>
-        </form>
-        <a href="{% url 'remove_bid' bid.id %}" method="POST">Remove bid</a>
+    <div class="col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3 card-padding-top-bottom">
+        <div class="card bg-light border-secondary box-shadow">
+            <ul class="list-group list-group-flush">
+                <img class="card-img-top" src="{% static 'logos/ah_logo_full.png' %}" alt="Image for Artifact Hunters Logo">
+                <li class="list-group-item bg-light">
+                    <h5 class="card-title text-center">You have no bids to display.</h5>
+                </li>
+                <li class="list-group-item bg-light text-center">
+                    <p>View our catalogue...</p>
+                    <a class="btn btn-secondary btn-lg box-shadow" href="{% url 'categories' %}" role="button">Categories</a>
+                    <a class="btn btn-secondary btn-lg box-shadow" href="{% url 'artifacts' %}" role="button">Artifacts</a>
+                </li>
+            </ul>
+        </div>
     </div>
-    {% endif %}
-    {% endfor %}
 </div>
-
-<div class="row no-gutters">
-    <h3>Successful bids</h3>
-</div>
-<div class="row">
-    {% for bid in bids %}
-    {% if bid.bid_event.bid_event_deadline <= datetime %}
-    {% if bid.bid_highest == True %}
-    {% if bid.bid_paid == False %}
-    <div class="col-3">
-        <p>Bid ID: {{ bid.id }}</p>
-        <p>Bid Event ID: {{ bid.bid_event.id }}</p>
-        <p>Bid Status: {{ bid.bid_event.bid_event_status }}</p>
-        <p>Artifact Name: {{ bid.bid_event.artifact.name }} </p>
-        <p>Bidder: {{ bid.bid_user.username }}</p>
-        <p>Highest Bid: {{ bid.bid_highest }}</p>
-        <p>Bid Amount: {{ bid.bid_amount }}</p>
-        <p>Bid Quantity: {{ bid.bid_quantity }}</p>
-        {% if bid.bid_note != "No note" %}
-            <p>Note: {{ bid.bid_note }}</p>
-        {% endif %}
-        <h6>Pay for artifact:</h6>
-        <form action="{% url 'add_bid_to_cart' bid.id %}" method="POST">
-            {% csrf_token %}
-            <button class="btn btn-success" type="submit">Add bid to cart</button>
-        </form>
-    </div>
-    {% endif %}
-    {% endif %}
-    {% endif %}
-    {% endfor %}
-</div>
-
-<div class="row no-gutters">
-    <h3>Paid bids</h3>
-</div>
-<div class="row">
-    {% for bid in bids %}
-    {% if bid.bid_event.bid_event_deadline <= datetime %}
-    {% if bid.bid_highest == True %}
-    {% if bid.bid_paid == True %}
-    {% if bid.bid_archived == False %}
-    <div class="col-3">
-        <p>Bid ID: {{ bid.id }}</p>
-        <p>Bid Event ID: {{ bid.bid_event.id }}</p>
-        <p>Bid Status: {{ bid.bid_event.bid_event_status }}</p>
-        <p>Artifact Name: {{ bid.bid_event.artifact.name }} </p>
-        <p>Bidder: {{ bid.bid_user.username }}</p>
-        <p>Highest Bid: {{ bid.bid_highest }}</p>
-        <p>Bid Amount: {{ bid.bid_amount }}</p>
-        <p>Bid Quantity: {{ bid.bid_quantity }}</p>
-        <a href="{% url 'archive_bid' bid.id %}" method="POST">Archive bid</a>
-    </div>
-    {% endif %}
-    {% endif %}
-    {% endif %}
-    {% endif %}
-    {% endfor %}
-</div>
-
-<div class="row no-gutters">
-    <h3>Unsuccessful bids</h3>
-</div>
-<div class="row">
-    {% for bid in bids %}
-    {% if bid.bid_event.bid_event_deadline <= datetime %}
-    {% if bid.bid_highest == False %}
-    {% if bid.bid_archived == False %}
-    <div class="col-3">
-        <p>Bid ID: {{ bid.id }}</p>
-        <p>Bid Event ID: {{ bid.bid_event.id }}</p>
-        <p>Bid Status: {{ bid.bid_event.bid_event_status }}</p>
-        <p>Artifact Name: {{ bid.bid_event.artifact.name }} </p>
-        <p>Bidder: {{ bid.bid_user.username }}</p>
-        <p>Highest Bid: {{ bid.bid_highest }}</p>
-        <p>Bid Amount: {{ bid.bid_amount }}</p>
-        <p>Bid Quantity: {{ bid.bid_quantity }}</p>
-        <a href="{% url 'archive_bid' bid.id %}" method="POST">Archive bid</a>
-    </div>
-    {% endif %}
-    {% endif %}
-    {% endif %}
-    {% endfor %}
-</div>
+{% endif %}
 {% endblock %}
