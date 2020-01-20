@@ -3,12 +3,14 @@ from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.template.context_processors import csrf
-from accounts.forms import UserLoginForm, UserRegistrationForm
+from accounts.forms import UserLoginForm, UserRegistrationForm, ProfileUpdateForm
+from artifacts.models import Artifact
 
 def index(request):
     """
     Return the index file for the accounts app
     """
+    
     return render(request, "index.html")
     
 
@@ -76,9 +78,9 @@ def registration(request):
                 messages.error(
                     request,
                     "We are not able to register your account at this time.")
-    
     else:
         registration_form = UserRegistrationForm()
+    
     return render(request, "registration.html", {
         "registration_form": registration_form})
 
@@ -90,3 +92,49 @@ def user_profile(request):
     """
     user = User.objects.get(email=request.user.email)
     return render(request,'profile.html', {"profile": user})
+
+
+@login_required
+def update_user_profile(request):
+    """
+    Update the profile for the logged in user
+    """
+    
+    if request.method == "POST":
+        profile_update_form = ProfileUpdateForm(request.POST)
+        
+        if profile_update_form.is_valid():
+            current_user = request.user
+            user_email = profile_update_form.cleaned_data["email"]
+            user_username = profile_update_form.cleaned_data["username"]
+            
+            try:
+                db_user = User.objects.get(email=user_email)
+                if db_user.email == current_user.email:
+                    db_user.username = user_username
+                    db_user.email = user_email
+                    db_user.save()
+                    messages.success(request, "Your profile has been updated.")
+                    return render(request,'profile.html', {"profile": db_user})
+                else:
+                    profile_update_form.add_error("email", "Sorry that email is taken by someone else.")
+            except:
+                try:
+                    db_user = User.objects.get(email=current_user.email)
+                    db_user.username = user_username
+                    db_user.email = user_email
+                    db_user.save()
+                    messages.success(request, "Your profile has been updated.")
+                    return render(request,'profile.html', {"profile": db_user})
+                except:
+                    messages.error(request, "We were unable to update your details.")
+            
+        else:
+            profile_update_form.add_error(None, "Please check the details.")
+    
+    else:
+        profile_update_form = ProfileUpdateForm(
+            initial={"username": request.user.username, "email": request.user.email}
+            )
+    
+    return render(request,'profile_update.html', {"profile_update_form": profile_update_form})

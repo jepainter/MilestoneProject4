@@ -1,10 +1,27 @@
 {% extends "base.html" %}
+{% load static from staticfiles %}
 {% block page_title %}Artifact Hunters{% endblock %}
-{% block page_heading %}Home{% endblock %}
 
 {% block content %}
- <div>
-     <p>Content for first screen will go here</p>
- </div>
+<div class="row justify-content-around no-gutters">
+    <div class="jumbotron bg-light box-shadow">
+        <div class="text-center">
+            <img src="{% static 'logos/ah_logo_full.png' %}" alt="Image for Artifact Hunters Logo">
+            <h1 class="jumbotron-heading">Welcome to Artifact Hunters!</h1>
+            <p class="lead">Your trusted on-line bidding spot for rare and unique artifacts.</p>
+            {% if not user.is_authenticated %}
+            <hr class="my-4">
+            <p>For the full experience, please sign-up or sign-in...</p>
+            <a class="btn btn-secondary btn-lg" href="{% url 'register' %}" role="button">Sign Up</a>
+            <a class="btn btn-secondary btn-lg" href="{% url 'login' %}" role="button">Log In</a>
+            {% else %}
+            <hr class="my-4">
+            <p>View our catalogue...</p>
+            <a class="btn btn-secondary btn-lg box-shadow" href="{% url 'categories' %}" role="button">Categories</a>
+            <a class="btn btn-secondary btn-lg box-shadow" href="{% url 'artifacts' %}" role="button">Artifacts</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}
     

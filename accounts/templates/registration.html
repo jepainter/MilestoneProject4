@@ -1,15 +1,37 @@
 {% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap_tags %}
 {% block page_title %}AH: Register{% endblock %}
-{% block page_heading %}User Registration Page{% endblock %}
+{% block page_heading %}
+<div class="row no-gutters align-items-center">
+    <span>
+        <img class="page-heading-img" src="{% static 'logos/ah_logo_small.png' %}" alt="Image for Artifact Hunters Logo"> 
+    </span>
+    <span class="align-middle">
+        <h1 class="page-heading-padding">Register</h1>
+    </span>
+</div>
+{% endblock %}
 
 {% block content %}
-
-<form method="POST">
-    {% csrf_token %}
-    {{ registration_form.as_p}}
-    <button type="submit">Register</button>
-</form>
-
-<p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
- 
+<div class="row justify-content-around no-gutters">
+    <div class="col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3 card-padding-top-bottom">
+        <div class="card bg-light border-secondary box-shadow">
+            <ul class="list-group list-group-flush">
+                <img class="card-img-top" src="{% static 'logos/ah_logo_full.png' %}" alt="Image for Artifact Hunters Logo">
+                <li class="list-group-item bg-light">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ registration_form | as_bootstrap }}
+                        <button class="btn btn-success btn-lg box-shadow" type="submit">Register</button>
+                    </form>
+                </li>
+                <li class="list-group-item bg-light text-center">
+                    <p>Already have an account?</p>
+                    <a class="btn btn-secondary btn-lg box-shadow" href="{% url 'login' %}">Login here</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 {% endblock %}
