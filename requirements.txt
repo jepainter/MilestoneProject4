@@ -2,6 +2,7 @@ astroid==1.6.6
 awscli==1.16.247
 botocore==1.12.237
 colorama==0.3.9
+dj-database-url==0.5.0
 Django==1.11.24
 django-forms-bootstrap==3.1.0
 docutils==0.15.2
@@ -15,6 +16,7 @@ parso==0.1.1
 pbr==5.4.3
 pexpect==4.7.0
 Pillow==6.2.1
+psycopg2-binary==2.8.4
 ptyprocess==0.6.0
 pyasn1==0.4.7
 pylint==1.8.1
