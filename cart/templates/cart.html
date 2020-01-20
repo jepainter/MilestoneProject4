@@ -1,68 +1,130 @@
 {% extends "base.html" %}
 {% load static from staticfiles %}
 {% block page_title %}AH: Cart{% endblock %}
-{% block page_heading %}Cart{% endblock %}
+{% block page_heading %}
+<div class="row no-gutters align-items-center">
+    <span>
+        <img class="page-heading-img" src="{% static 'logos/ah_logo_small.png' %}" alt="Image for Artifact Hunters Logo"> 
+    </span>
+    <span class="align-middle">
+        <h1 class="page-heading-padding">Cart</h1>
+    </span>
+</div>
+{% endblock %}
 
 {% block content %}
-{% if cart_items %}
-<div class="row justify-content-around no-gutters">
-    {% for item in cart_items %}
-    <div class="card col-xs-10 col-sm-6 col-md-4 col-lg-3">
-            <div class="card-img-top artifact" style="background-image: url('{{ MEDIA_URL }}{{ item.artifact.image }}')" alt="{{ item.artifact.name }}"></div>
-            <div class="card-body">
-                <h5 class="card-title">{{ item.artifact.name }}</h5>
-                <p class="card-text">Description: {{ item.artifact.description }}</p>
-            </div>
+{% if cart_items or bid_cart_items %}
+<div class="row no-gutters">
+    <div class="col-12 col-md-9 col-lg-10 card-padding-top-bottom">
+        {% if cart_items %}
+        <div class="card border-secondary box-shadow">
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">Purchase Price: {{ item.artifact.purchase_price }}</li>
-                <li class="list-group-item">
-                    <h6>Quantity:</h6>
-                    <form action="{% url 'adjust_cart' item.id %}" method="POST">
-                        {% csrf_token %}
-                        <input name="quantity" type="number" min="0" max="{{ item.artifact.quantity }}" class="form-control" placeholder="{{ item.quantity }}">
-                        <span class="input-group-btn">
-                            <button class="btn btn-success" type="submit">Adjust quantity</button>
-                        </span>
-                    </form>
+                <li class="list-group-item bg-light">
+                    <h4>Purchase Outright</h4>
                 </li>
-                <li class="list-group-item">
-                <a href="{% url 'remove_item_from_cart' item.id %}" method="POST">Remove item</a>
+                <div class="row no-gutters bg-light-grey">
+                {% for item in cart_items %}
+                <div class="col-12 col-md-6 col-lg-4 col-xl-3 card-padding">
+                    <div class="card bg-light border-secondary h-100 box-shadow">
+                        <ul class="list-group list-group-flush">
+                            <a class="card-link" href="{% url 'view_artifact' item.artifact.id %}">
+                                <img class="card-img-top bg-grey" src="{{ MEDIA_URL }}{{ item.artifact.image }}" alt="Image for {{ item.artifact.name }}">
+                                <li class="list-group-item bg-light">
+                                    <h5 class="card-title">{{ item.artifact.name }}</h5>
+                                    <p class="card-text">Purchase Price: {{ item.artifact.purchase_price }}</p>
+                                </li>
+                            </a>
+                            <li class="list-group-item bg-light">
+                                <h6>Quantity:</h6>
+                                <form action="{% url 'adjust_cart' item.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <input name="quantity" type="number" min="1" max="{{ item.artifact.quantity }}" value="{{ item.quantity }}" class="form-control" placeholder="Enter adjust amount..." required>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-success btn-margin box-shadow" type="submit">Adjust quantity</button>
+                                        <a class="btn btn-danger btn-margin box-shadow" href="{% url 'remove_item_from_cart' item.id %}" method="POST">Remove item</a>
+                                    </span>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                {% endfor %}
+                </div>
+            </ul>
+        </div>
+        <div class="card-padding-top-bottom"></div>
+        {% endif %}
+        {% if bid_cart_items %}
+        <div class="card border-secondary box-shadow">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item bg-light">
+                    <h4>Successful Bids Added</h4>
+                </li>
+                <div class="row no-gutters bg-light-grey">         
+                    {% for item in bid_cart_items %}
+                    <div class="col-12 col-md-6 col-lg-4 col-xl-3 card-padding">
+                        <div class="card bg-light border-secondary h-100 box-shadow">
+                            <ul class="list-group list-group-flush">
+                                <a class="card-link" href="{% url 'view_artifact' item.artifact.id %}">
+                                    <img class="card-img-top bg-grey" src="{{ MEDIA_URL }}{{ item.artifact.image }}" alt="Image for {{ item.artifact.name }}">
+                                    <li class="list-group-item bg-light">
+                                        <h5 class="card-title">{{ item.artifact.name }}</h5>
+                                        <p class="card-text">Bid Amount: {{ item.bid_amount }}</p>
+                                        <p class="card-text">Quantity: {{ item.quantity }}</p>
+                                    </li>
+                                </a>
+                                <li class="list-group-item bg-light">
+                                    <span class="input-group-btn">
+                                        <a class="btn btn-danger btn-margin box-shadow" href="{% url 'remove_bid_from_cart' item.id %}" method="POST">Remove bid</a>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </ul>    
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-12 col-md-3 col-lg-2 card-padding-left card-padding-top-bottom">
+        {% if total != 0 %}
+        <div class="card bg-light border-secondary box-shadow">
+            <ul class="list-group list-group-flush">
+                <img class="card-img-small" src="{% static 'logos/ah_logo_full.png' %}" alt="Image for Artifact Hunters Logo">
+                <li class="list-group-item bg-light text-center">
+                    <h4>Checkout</h4>
+                </li>
+                <li class="list-group-item bg-light">
+                    <h5 class="card-title">Total:</h5>
+                    <h5>{{ total }}</h5>
+                </li>
+                <li class="list-group-item bg-light text-center">
+                    <a class="btn btn-success btn-margin box-shadow" href="{% url 'payment' %}" role="button">Pay Now</a>
+                </li>
+                
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% else %}
+<div class="row justify-content-around no-gutters">
+    <div class="col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3 card-padding-top-bottom">
+        <div class="card bg-light border-secondary box-shadow">
+            <ul class="list-group list-group-flush">
+                <img class="card-img-top" src="{% static 'logos/ah_logo_full.png' %}" alt="Image for Artifact Hunters Logo">
+                <li class="list-group-item bg-light">
+                    <h5 class="card-title text-center">Your cart is empty.</h5>
+                </li>
+                <li class="list-group-item bg-light text-center">
+                    <p>View our catalogue...</p>
+                    <a class="btn btn-secondary btn-lg box-shadow" href="{% url 'categories' %}" role="button">Categories</a>
+                    <a class="btn btn-secondary btn-lg box-shadow" href="{% url 'artifacts' %}" role="button">Artifacts</a>
                 </li>
             </ul>
         </div>
-    {% endfor %}
+    </div>
 </div>
 {% endif %}
-
-{% if bid_cart_items %}
-<div class="row justify-content-around no-gutters">
-    {% for item in bid_cart_items %}
-    <div class="card col-xs-10 col-sm-6 col-md-4 col-lg-3">
-            <div class="card-img-top artifact" style="background-image: url('{{ MEDIA_URL }}{{ item.artifact.image }}')" alt="{{ item.artifact.name }}"></div>
-            <div class="card-body">
-                <h5 class="card-title">{{ item.artifact.name }}</h5>
-                <p class="card-text">Description: {{ item.artifact.description }}</p>
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Bid Amount: {{ item.bid_id }}</li>
-                <li class="list-group-item">Bid Amount: {{ item.bid_amount }}</li>
-                <li class="list-group-item">Quantity: {{ item.quantity }}</li>
-                <li class="list-group-item">
-                <a href="{% url 'remove_bid_from_cart' item.id %}" method="POST">Remove bid</a>
-                </li>
-            </ul>
-        </div>
-    {% endfor %}
-</div>
-{% endif %}
-
-<div class="row justify-content-around no-gutters">
-    {% if total != 0 %}
-    <p><h5>Total:</h5></p>
-    <p><h6>{{ total }}</h6></p>
-    <a href="{% url 'payment' %}" class="btn btn-success" role="button">Pay Now</a>
-    {% else %}
-    <p>There are no items in the cart</p>
-    {% endif %}
-</div>
 {% endblock %}

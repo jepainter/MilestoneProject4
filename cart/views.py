@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, reverse
+from django.contrib import messages
 from artifacts.models import Artifact
 from bids.models import BidLineItem
 
@@ -60,10 +61,16 @@ def add_bid_to_cart(request, id):
     """
     
     bid_line_item = BidLineItem.objects.get(pk=id)
-    bid_cart = request.session.get("bid_cart", {})
-    bid_cart[bid_line_item.bid_event.artifact.id] = bid_cart.get(
-        bid_line_item.bid_event.artifact.id, id)
-    request.session["bid_cart"] = bid_cart
+    if bid_line_item.bid_event.artifact.quantity != 0:
+        bid_cart = request.session.get("bid_cart", {})
+        bid_cart[bid_line_item.bid_event.artifact.id] = bid_cart.get(
+            bid_line_item.bid_event.artifact.id, id)
+        request.session["bid_cart"] = bid_cart
+    else:
+        messages.error(
+            request,
+            "Sorry, the artifact has been purchased by someone else."
+            )
     
     return redirect(reverse("view_cart"))
 
