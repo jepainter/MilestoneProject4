@@ -2,7 +2,16 @@
 {% load static from staticfiles %}
 {% load bootstrap_tags %}
 {% block page_title %}AH: History{% endblock %}
-{% block page_heading %}History{% endblock %}
+{% block page_heading %}
+<div class="row no-gutters align-items-center">
+    <span>
+        <img class="page-heading-img" src="{% static 'logos/ah_logo_small.png' %}" alt="Image for Artifact Hunters Logo"> 
+    </span>
+    <span class="align-middle">
+        <h1 class="page-heading-padding">History</h1>
+    </span>
+</div>
+{% endblock %}
 
 {% block content %}
 <div class="row justify-content-around no-gutters">

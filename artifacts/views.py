@@ -1,8 +1,11 @@
 from django.shortcuts import render
 from django.utils import timezone
 from artifacts.models import Artifact
-from histories.models import HistoryEvent
 from bids.models import BidEvent, BidLineItem
+from histories.models import HistoryEvent
+from payment.models import OrderLineItem
+from reviews.models import ReviewLineItem
+
 
 # Views for the artifacts in app
 def all_artifacts(request):
@@ -24,9 +27,13 @@ def view_artifact(request, id):
     """
 
     history_events = HistoryEvent.objects.filter(history_id__artifact=id)
+    ownership = OrderLineItem.objects.filter(artifact=id).filter(owner_id=request.user.id).first()
+    reviews = ReviewLineItem.objects.filter(review_id__artifact=id)
+    reviewed = False
     
     try:
-        bid_line_item = BidLineItem.objects.filter(bid_user=request.user.id).get(bid_event__artifact=id)
+        bid_line_item = BidLineItem.objects.filter(
+            bid_user=request.user.id).get(bid_event__artifact=id)
         bid_event = bid_line_item.bid_event
         artifact = bid_line_item.bid_event.artifact
     except:
@@ -48,12 +55,23 @@ def view_artifact(request, id):
                 "artifact_id" : artifact_id,
                 "artifact_quantity": artifact_quantity,
                 }
+                
+    if ownership != None:
+        owner = True
+        for review in reviews:
+            if review.review_owner_id == ownership.owner_id:
+                reviewed = True
+    else:
+        owner = False
     
     return render(request, "artifact_detail.html", {
         "artifact": artifact,
         "bid_event": bid_event,
         "datetime": timezone.now(),
         "history_events": history_events,
+        "reviews": reviews,
         "bid_line_item" : bid_line_item,
-        "artifact_in_cart": artifact_in_cart
+        "artifact_in_cart": artifact_in_cart,
+        "owner": owner,
+        "reviewed": reviewed,
         })

@@ -1,29 +1,44 @@
 {% extends "base.html" %}
 {% load static from staticfiles %}
 {% block page_title %}AH: Categories{% endblock %}
-{% block page_heading %}Categories{% endblock %}
+{% block page_heading %}
+<div class="row no-gutters align-items-center">
+    <span>
+        <img class="page-heading-img" src="{% static 'logos/ah_logo_small.png' %}" alt="Image for Artifact Hunters Logo"> 
+    </span>
+    <span class="align-middle">
+        <h1 class="page-heading-padding">Categories</h1>
+    </span>
+</div>
+{% endblock %}
 
 {% block content %}
-
-<div class="row justify-content-around no-gutters">
-    {% for category in categories %}
-        <div class="card col-xs-10 col-sm-6 col-md-4 col-lg-3">
-            <a href="{% url 'view_category' category.id %}">
-            <div class="card-img-top category" style="background-image: url('{{ MEDIA_URL }}{{ category.image }}')" alt="{{ category.category_name }}"></div>
-            <div class="card-body">
-                <h5 class="card-title">{{ category.category_name }}</h5>
-                <p class="card-text">{{ category.category_description }}</p>
-                
-            </div>
-            </a>
+<div class="row justify-content-around no-gutters">         
+    <div class="col-12 card-padding-top-bottom">
+        <div class="card border-secondary box-shadow">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item bg-light">
+                    <h4>View Categories</h4>
+                </li>
+                <div class="row no-gutters bg-light-grey">
+                    {% for category in categories %}
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 card-padding">
+                        <div class="card bg-light border-secondary h-100 box-shadow">
+                            <ul class="list-group list-group-flush">
+                                <a class="card-link" href="{% url 'view_category' category.id %}">
+                                    <img class="card-img-top bg-grey" src="{{ MEDIA_URL }}{{ category.category_image }}" alt="Image for {{ category.category_name }}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ category.category_name }}</h5>
+                                        <p class="card-text">{{ category.category_description }}</p>
+                                    </div>
+                                </a>
+                            </ul>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </ul>
         </div>
-    {% endfor %}
+    </div>
 </div>
-
-{% if request.user.is_superuser %}
-<div class="row justify-content-around no-gutters">
-    <a href="#">Add category</a>
-</div>
-{% endif %}
-
 {% endblock %}

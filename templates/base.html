@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <!-- Style sheets -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.3.1/spacelab/bootstrap.min.css" integrity="sha256-iQE5ZOW7wyI/QCpgBU4gGoBHmb+8srKJjr3e8K0nBx8=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.4.1/sandstone/bootstrap.min.css" integrity="sha256-oP5uUxywlq68olzn9VvPJQdKbbnVOaBNRfnNsSNklf0=" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" type="text/css" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
     
@@ -16,6 +16,9 @@
     <link rel="shortcut icon" href="{% static 'logos/favicon.ico' %}" type="image/x-icon" />
     
     <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/umd/popper.min.js" integrity="sha256-fTuUgtT7O2rqoImwjrhDgbXTKUwyxxujIMRIK7TbuNU=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     {% block head_js %}
     {% endblock head_js %}
     
@@ -25,116 +28,123 @@
 <body>
     
     <!-- Navigation section -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light box-shadow">
         <a class="navbar-brand" href="/">
-            <img src="{% static 'logos/ah_logo_full4.png' %}" alt="Artifact Hunters Logo">
-            <span class="navbar-brand-text">Artifact Hunters</span>
+            <img src="{% static 'logos/ah_logo_full4.png' %}" alt="Image for Artifact Hunters Logo">
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarColor01">
+        <div class="collapse navbar-collapse" id="navbarColor03">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a href="{% url 'categories' %}">Categories</a>
+                    <a class="nav-link" href="{% url 'categories' %}">Categories</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url 'artifacts' %}">Artifacts</a>
+                    <a class="nav-link" href="{% url 'artifacts' %}">Artifacts</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url 'view_cart' %}">Cart</a>
+                    <a class="nav-link" href="{% url 'view_cart' %}">Cart</a>
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a href="#">Bids</a>
+                    <a class="nav-link" href="{% url 'view_user_bids' %}">My Bids</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url 'profile' %}">Profile</a>
+                    <a class="nav-link" href="{% url 'profile' %}">Profile</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url 'logout' %}">Logout</a>
+                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a href="{% url 'login' %}">Login</a>
+                    <a class="nav-link" href="{% url 'login' %}">Login</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url 'register' %}">Register</a>
+                    <a class="nav-link" href="{% url 'register' %}">Register</a>
                 </li>
                 {% endif %}
             </ul>
             <form class="form-inline my-2 my-lg-0" action="{% url 'search' %}" method="GET">
                 <input class="form-control mr-sm-2" type="text" name="q" placeholder="Search">
-                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                <button class="btn btn-secondary my-2 my-sm-0 box-shadow" type="submit">Search</button>
             </form>
         </div>
     </nav>
 
     <!-- Content section -->
     <div class="container-fluid">
-        <h1>{% block page_heading %}{% endblock %}</h1>
-        <hr> {% if messages %}
-        <div>
-            {% for message in messages %} {{ message }} {% endfor %}
+        {% block page_heading %}{% endblock %}
+        {% if messages %}
+        <div class="row justify-content-around no-gutters">
+            <div class="col-12 col-md-6 text-center">
+                <hr>
+                    {% for message in messages %} 
+                    <div class="alert alert-{{ message.tags }} alert-dismissible border-secondary box-shadow" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                <hr>
+            </div>
         </div>
         {% endif %}
-        <hr> {% block content %} {% endblock %}
+        {% block content %} {% endblock %}
     </div>
     
     <!-- Footer section -->
-    <footer class="container-fluid">
-        <div class="row">
-            <div class="col-sm-4">
-                <h5>Developer</h5>
-                <p>This site has been created by Jonathan Painter. View the README here:
-                    <a href="#" target="_blank" aria-label="Link to readme" rel="noopener">
-                        <i class="fas fa-download" aria-hidden="true"></i>
-                        <span class="sr-only">Readme Link.</span>
-                    </a>
-                </p>
-            </div>
-            <div class="col-sm-4">
-                <h5>Disclaimer</h5>
-                <p>This site is created for education purposes only.</p>
-            </div>
-            <div class="col-sm-4">
-                <h5>Social Media</h5>
-                <p>Folow us on social media:</p>
+    <footer class="container-fluid footer-position">
+        <div class="row footer-padding-top bg-light box-shadow">
+            <div class="col-sm-4 text-center">
+                <h6 class="text-uppercase footer-heading">Social Media</h6>
                 <ul class="list-inline">
                     <li class="list-inline-item">
                         <a target="_blank" aria-label="Link to Facebook" rel="noopener" href="https://www.facebook.com/">
-                            <i class="fab fa-facebook" aria-hidden="true"></i>
+                            <i class="fab fa-facebook footer-link" aria-hidden="true"></i>
                             <span class="sr-only">Facebook</span>
-                    </a>
+                        </a>
                     </li>
                     <li class="list-inline-item">
                         <a target="_blank" aria-label="Link to Twitter" rel="noopener" href="https://twitter.com/">
-                            <i class="fab fa-twitter" aria-hidden="true"></i>
+                            <i class="fab fa-twitter footer-link" aria-hidden="true"></i>
                             <span class="sr-only">Twitter</span>
                         </a>
                     </li>
                     <li class="list-inline-item">
                         <a target="_blank" aria-label="Link to YouTube" rel="noopener" href="https://www.youtube.com/">
-                            <i class="fab fa-youtube" aria-hidden="true"></i>
+                            <i class="fab fa-youtube footer-link" aria-hidden="true"></i>
                             <span class="sr-only">YouTube</span>
                         </a>
                     </li>
                     <li class="list-inline-item">
                         <a target="_blank" aria-label="Link to Instagram" rel="noopener" href="https://instagram.com/">
-                            <i class="fab fa-instagram" aria-hidden="true"></i>
+                            <i class="fab fa-instagram footer-link" aria-hidden="true"></i>
                             <span class="sr-only">Instagram</span>
                         </a>
                     </li>
                 </ul>
             </div>
+            <div class="col-sm-4">
+                <h6 class="text-uppercase footer-heading">Developer</h6>
+                <p>This site has been created by Jonathan Painter. View the README here:
+                    <a href="#" target="_blank" aria-label="Link to readme" rel="noopener">
+                        <i class="fas fa-download footer-link" aria-hidden="true"></i>
+                        <span class="sr-only">Readme Link.</span>
+                    </a>
+                </p>
+            </div>
+            <div class="col-sm-4">
+                <h6 class="text-uppercase footer-heading">Disclaimer</h6>
+                <p>This site is created for education purposes only.</p>
+            </div>
+            
         </div>
     </footer>    
     
     <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/umd/popper.min.js" integrity="sha256-fTuUgtT7O2rqoImwjrhDgbXTKUwyxxujIMRIK7TbuNU=" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $('.dropdown-toggle').dropdown();

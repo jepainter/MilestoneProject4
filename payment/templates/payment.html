@@ -13,7 +13,16 @@
 {% endblock head_js %}
 
 {% block page_title %}AH: Payment{% endblock %}
-{% block page_heading %}Payment{% endblock %}
+{% block page_heading %}
+<div class="row no-gutters align-items-center">
+    <span>
+        <img class="page-heading-img" src="{% static 'logos/ah_logo_small.png' %}" alt="Image for Artifact Hunters Logo"> 
+    </span>
+    <span class="align-middle">
+        <h1 class="page-heading-padding">Payment</h1>
+    </span>
+</div>
+{% endblock %}
 
 {% block content %}
 <div class="row no-gutters">

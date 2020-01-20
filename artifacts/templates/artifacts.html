@@ -1,23 +1,77 @@
 {% extends "base.html" %}
 {% load static from staticfiles %}
 {% block page_title %}AH: Artifacts{% endblock %}
-{% block page_heading %}Artifacts{% endblock %}
+{% block page_heading %}
+<div class="row no-gutters align-items-center">
+    <span>
+        <img class="page-heading-img" src="{% static 'logos/ah_logo_small.png' %}" alt="Image for Artifact Hunters Logo"> 
+    </span>
+    <span class="align-middle">
+        <h1 class="page-heading-padding">Artifacts</h1>
+    </span>
+</div>
+{% endblock %}
 
 {% block content %}
-
-<div class="row no-gutters">
-    {% for artifact in artifacts %}
-        <div class="card col-xs-10 col-sm-6 col-md-4 col-lg-3">
-            <img class="card-img-top artifact" src="url('{{ MEDIA_URL }}{{ artifact.image }}')" alt="{{ artifact.name }}">
-            <div class="card-body">
-                <h5 class="card-title">{{ artifact.name }}</h5>
-                <p class="card-text">Description: {{ artifact.description }}</p>
-                <p class="card-text">Category: {{ artifact.category.category_name }}</p>
-                <a href="{% url 'view_artifact' artifact.id %}">View detail</a>
-                <a href="{% url 'view_bids' artifact.id %}">View bids</a>
-            </div>
+<div class="row justify-content-around no-gutters">         
+    <div class="col-12 card-padding-top-bottom">
+        <div class="card border-secondary box-shadow">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item bg-light">
+                    <h4>In Stock</h4>
+                </li>
+                <div class="row no-gutters bg-light-grey">
+                    {% for artifact in artifacts %}
+                    {% if artifact.quantity != 0 %}
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 card-padding">
+                        <div class="card bg-light border-secondary h-100 box-shadow">
+                            <ul class="list-group list-group-flush">
+                                <a class="card-link" href="{% url 'view_artifact' artifact.id %}">
+                                    <img class="card-img-top bg-grey" src="{{ MEDIA_URL }}{{ artifact.image }}" alt="Image for {{ artifact.name }}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ artifact.name }}</h5>
+                                        <p class="card-text">Category: {{ artifact.category.category_name }}</p>
+                                    </div>
+                                </a>
+                            </ul>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </ul>
         </div>
-    {% endfor %}
+    </div>
 </div>
 
+<div class="row justify-content-around no-gutters">         
+    <div class="col-12 card-padding-top-bottom">
+        <div class="card border-secondary box-shadow">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item bg-light">
+                    <h4>Sold Out</h4>
+                </li>
+                <div class="row no-gutters bg-light-grey">
+                    {% for artifact in artifacts %}
+                    {% if artifact.quantity == 0 %}
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 card-padding">
+                        <div class="card bg-light border-secondary h-100 box-shadow">
+                            <ul class="list-group list-group-flush">
+                                <a class="card-link" href="{% url 'view_artifact' artifact.id %}">
+                                    <img class="card-img-top bg-grey" src="{{ MEDIA_URL }}{{ artifact.image }}" alt="Image for {{ artifact.name }}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ artifact.name }}</h5>
+                                        <p class="card-text">Category: {{ artifact.category.category_name }}</p>
+                                    </div>
+                                </a>
+                            </ul>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </ul>
+        </div>
+    </div>
+</div>
 {% endblock %}
