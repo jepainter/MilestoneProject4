@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-#import env
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -38,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_forms_bootstrap',
     'accounts',
     'artifacts',
     'bids',
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'categories',
     'histories',
     'payment',
+    'reviews',
 ]
 
 MIDDLEWARE = [
@@ -109,6 +110,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "accounts.backends.EmailAuth",
+    ]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
@@ -133,8 +139,8 @@ STATICFILES_DIRS = (
 )
 
 # Media storage location
-MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = '/media/'
 
 # Stripe key access
 STRIPE_PUBLISHABLE = os.environ.get("STRIPE_PUBLISHABLE")
@@ -142,3 +148,10 @@ STRIPE_SECRET = os.environ.get("STRIPE_SECRET")
 
 # Message storage for feedback to the user
 MESSAGE_STORAGE ="django.contrib.messages.storage.session.SessionStorage"
+
+# Emailing functionality
+EMAIL_USE_TLS = True
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = os.environ.get("EMAIL_ADDRESS")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASSWORD")
+EMAIL_PORT = 587
