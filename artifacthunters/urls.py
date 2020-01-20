@@ -29,6 +29,8 @@ from categories import urls as categories_urls
 from histories.views import view_history
 from histories import urls as histories_urls
 from payment import urls as payment_urls
+from reviews.views import add_review
+from reviews import urls as review_urls
 from search import urls as search_urls
 
 # URL's for rendering views
@@ -42,6 +44,7 @@ urlpatterns = [
     url(r'^cart/', include(cart_urls)),
     url(r'^categories/', include(categories_urls)),
     url(r'^histories/', include(histories_urls)),
-    url(r'^payment/', include(payment_urls)),    
+    url(r'^payment/', include(payment_urls)),
+    url(r'^reviews/', include(review_urls)),
     url(r'^search/', include(search_urls)),
     ]
