@@ -8,6 +8,7 @@ Django==1.11.24
 django-forms-bootstrap==3.1.0
 django-storages==1.8
 docutils==0.15.2
+gunicorn==20.0.4
 ikp3db==1.1.4
 isort==4.3.21
 jedi==0.11.1
