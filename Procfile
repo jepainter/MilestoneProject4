@@ -1,0 +1,1 @@
+web: gunicorn artifacthunters.wsgi:application
