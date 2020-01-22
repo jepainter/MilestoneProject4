@@ -88,6 +88,7 @@ class OrderDetailsForm(forms.ModelForm):
     
     postcode = forms.CharField(
         label="Postcode:",
+        required=False,
         widget=forms.TextInput(
             attrs={
                 'placeholder': "Please enter a postcode..."
