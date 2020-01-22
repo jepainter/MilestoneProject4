@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 from django.contrib.auth.views import (
     password_reset,
     password_reset_done,
