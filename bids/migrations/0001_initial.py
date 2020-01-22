@@ -7,9 +7,8 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
-    initial = True
     atomic = False
+    initial = True
 
     dependencies = [
         ('artifacts', '0004_auto_20191203_0730'),
