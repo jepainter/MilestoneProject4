@@ -1,23 +1,9 @@
-# Django Milestone Project
-
-This is my Milestone Project for Full Stack Development.
-
-## Travis Continuous Integration Testing:
-
-[![Build Status](https://travis-ci.org/jepainter/MilestoneProject4.svg?branch=master)](https://travis-ci.org/jepainter/MilestoneProject4)
 
 # Milestone Project 4: Artifact Hunters Website
 
 The deployed website can be accessed from here (Heroku): [Artifact Hunters](https://artifact-hunters.herokuapp.com/)
 
-## Temporary note for the assessor (this section will be removed in future):
-
-- The website has various user types that have different priviledges in terms of actions they can take.  For testing of the super user / administrative account please use the following log in information:
-    - Email: ubradmin@yahoo.com
-    - Password: qazwsxedc1234
-- The information above is made available to the assessor to demonstrate the full functionality of the site, and will be changed once the assessment has been completed.
-- Other account types (regular user) can be assessed by registering a new account.
-- Visitor accounts need no registrations, and will demonstrate limited functionality of the site in line with previleges.
+Travis Continuous Integration Testing: [![Build Status](https://travis-ci.org/jepainter/MilestoneProject4.svg?branch=master)](https://travis-ci.org/jepainter/MilestoneProject4)
 
 ## Goal of the website
 
