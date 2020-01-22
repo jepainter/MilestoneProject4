@@ -18,19 +18,13 @@
         <div class="card bg-light border-secondary box-shadow">
             <ul class="list-group list-group-flush">
                 <img class="card-img-top" src="{% static 'logos/ah_logo_full.png' %}" alt="Image for Artifact Hunters Logo">
-                    <div class="row no-gutters bg-light-grey">
-                        <div class="col-12 card-padding">
-                            <div class="card bg-light border-secondary box-shadow">
-                                <li class="list-group-item bg-light">
-                                    <h4>Your Profile</h4>
-                                </li>
-                                <li class="list-group-item bg-light">
-                                    <p>Username: {{ profile.username }}</p>
-                                    <p>Email: {{ profile.email }}</p>
-                                </li>
-                            </div>
-                        </div>
-                    </div>
+                <li class="list-group-item bg-light text-center">
+                    <h4>Your Profile</h4>
+                </li>
+                <li class="list-group-item bg-light">
+                    <p>Username: {{ profile.username }}</p>
+                    <p>Email: {{ profile.email }}</p>
+                </li>
                 <li class="list-group-item bg-light text-center">
                     <p>Want to change your profile details?</p>
                     <a class="btn btn-secondary btn-lg box-shadow" href="{% url 'update_user_profile' %}" role="button">Update Profile</a>

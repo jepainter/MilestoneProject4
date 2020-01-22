@@ -74,10 +74,11 @@ This site is limited to the use of HMTL, CSS, JavaScript, Python, Django and Pos
 - Feature 14 - Social Media: Links to social media platforms.
 
 ### Features Left to Implement
-- Feature A - Email order to purchaser on succesful conclusion of sale.
+- Feature A - Email order to purchaser on successful conclusion of sale.
 - Feature B - Improved search functionality to allow searches based on categories, dates added, alphabetical order etc.
-- Feature C - Storage of greater number of images for specific artifact, in order to display more aspects of a specific artifact.
+- Feature C - Storage of greater number of images for specific artifact, in order to display more aspects of a specific artifact, possibly in a pop-up modal or carousel.
 - Feature D - Pagination for better display as catalogue grows.
+- Feature E - Page for display of items purchased historically.
 
 ## Technologies Used
 
@@ -159,21 +160,39 @@ This project is deployed on Heroku and GitHub and is accessible as follows:
 For this project I used the AWS Cloud9 IDE platform [AWS Cloud9](https://www.awseducate.com) via the AWS Educate portal.
 The platform allowed me to commit my pages (and changes) to Git, following which it was pushed through to the [GitHub repository](https://github.com/jepainter/MilestoneProject4).
 
-Deployment of the website from to Heroku can accomplished through the following method: 
-1. Log into the Heroku website. 
-2. Install the Heroku CLI in the IDE terminal.
-3. Log into Heroku from the IDE terminal using $ heroku login.
-4. Clone the repository by typing ```heroku git:clone -a ultimate-book-review``` and then ```cd ultimate-book-review``` into your IDE terminal.
-5. Changes and updates to code can be made in the IDE.
-6. To deploy changes to Heroku type ```git add <your filename>```, followed by ```git commit -m "messaage regarding changes"``` and lastly ```git push heroku master``` into the IDE terminal.
-
-This website can also be locally deployed by following the method outlined below:
-1. Use the following link to access the project repository: [GitHub](https://github.com/jepainter/MilestoneProject3).
+This website can be locally deployed from GitHub by following the method outlined below:
+1. Use the following link to access the project repository: [GitHub](https://github.com/jepainter/MilestoneProject4).
 2. Click on the **Clone or Download** button, under the repository name.
 3. Copy the clone URL for the repository, found in the **Clone with HTTPS** section. 
 4. Open **Git Bash** in your local IDE environment.
 5. Select the location to where the cloned directory must be made.
 6. Input ```git clone``` together with the copied clone URL into Git Bash and press Enter.
+7. Create an env.py file in the project directory and set environmental variables for your working environment, which should include the following:
+    - os.environ.setdefault("HOSTNAME", "Your Hostname")
+    - os.environ.setdefault("SECRET_KEY", "Your Secret key")
+    - os.environ.setdefault("EMAIL_ADDRESS", "Your site Email address")
+    - os.environ.setdefault("EMAIL_PASSWORD", "Your site Email password")
+    - os.environ.setdefault("STRIPE_PUBLISHABLE", "Your Stripe publishable key")
+    - os.environ.setdefault("STRIPE_SECRET", "Your Stripe secret key")
+    - os.environ.setdefault("DATABASE_URL", "Your Postgres database url")
+    - os.environ.setdefault("AWS_ACCESS_KEY_ID", "Your AWS access key")
+    - os.environ.setdefault("AWS_SECRET_ACCESS_KEY", "Your AWS secret acess key")
+8. For the above environmental variables, you will be required to create/provide account details, which include:
+    - Stripe: Register an account and obtain the relevant keys (for testing environments)
+    - AWS:
+        -- S3: Create the relevant buckets in order to store static and media files, obtain relevant credentials.
+        -- IAM: Set the relevant permissions and accesses
+    - PostGres: Access can be created once the project is deployed to Heroku, by creating a new app and creating a Heroku PostGres resource under the Resources tab.  The DATABASE_URL can be obtained from the Config Vars under the Settings tab.  Note that if this is not done, the app will revert to a SQLite database.
+9. Include in the settings.py file found under the artifacthunters folder to include import env, in order to access your environmental variables. Never publish or push the env.py to public repositories.
+
+The website can be deployed to and from Heroku by following the next steps:
+1. Go to the Heroku website to sign up. Create a new project by clicking the New button.
+2. Download and install the Heroku CLI in your IDE.
+3. If you haven't already, log in to your Heroku account from the terminal in your IDE using $ heroku login and follow the prompts to create a new SSH public key.
+4. Clone the repository to your local machine, by entering **$ heroku git:clone -a artifact-hunters**
+and **$ cd artifact-hunters** in the terminal of your IDE.
+5. Deploy your changes to Heroku using Git by using **$ git add .** and **$ git commit -am "make it better"** and **$ git push heroku master**.
+6. Make sure that the relevant environmental variables is set under the Config Vars section under the Settings tab.
 
 The deployed version on **Heroku** is the same as the development version.
 
