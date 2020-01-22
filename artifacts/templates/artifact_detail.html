@@ -23,7 +23,8 @@
                         <img class="card-img-top" src="{{ MEDIA_URL }}{{ artifact.image }}" alt="Image for {{ artifact.name }}">
                         <h3 class="card-title">{{ artifact.name }}</h3>
                         <p class="card-text">Category: {{ artifact.category.category_name }}</p>
-                        <p class="card-text">Reserve Price: {{ artifact.reserve_price }} | Purchase Price: {{ artifact.purchase_price }}</p>
+                        <p class="card-text">Reserve Price: EUR {{ artifact.reserve_price }} | Purchase Price: EUR {{ artifact.purchase_price }}</p>
+                        <p class="card-text">Quantity Available: {{ artifact.quantity }}</p>
                         <p class="card-text">Description: {{ artifact.description }}</p>
                     </div>
                 </div>
