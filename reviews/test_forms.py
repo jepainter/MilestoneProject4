@@ -1,7 +1,7 @@
 from django.test import TestCase
 from reviews.forms import ReviewForm
 
-class TestHistoryEventForm(TestCase):
+class TestReviewForm(TestCase):
     """
     Tests for valid Review forms
     """
