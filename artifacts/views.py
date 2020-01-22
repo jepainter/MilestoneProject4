@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from artifacts.models import Artifact
 from bids.models import BidEvent, BidLineItem
@@ -44,7 +44,7 @@ def view_artifact(request, id):
             artifact = bid_event.artifact
         except:
             bid_event = ""
-            artifact = Artifact.objects.get(id=id)
+            artifact = get_object_or_404(Artifact, pk=id)
     
     cart = request.session.get("cart", {})
     artifact_in_cart = {}
