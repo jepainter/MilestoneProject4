@@ -9,7 +9,6 @@ class PaymentDetailsForm(forms.Form):
     """
     MONTH_CHOICES = [(i, i) for i in range(1, 13)]
     YEAR_CHOICES = [(i, i) for i in range(2020, 2039)]
-    
     credit_card_number = forms.CharField(
         label="Card Number:",
         widget=forms.TextInput(
@@ -45,7 +44,6 @@ class OrderDetailsForm(forms.ModelForm):
     Form for capturing delivery address details,
     inherits from the Order model.    
     """
-    
     full_name = forms.CharField(
         label="Full Name:",
         widget=forms.TextInput(
@@ -53,7 +51,6 @@ class OrderDetailsForm(forms.ModelForm):
                 'placeholder': "Who should the receive the purchase..."
                 })
         )
-        
     phone_number = forms.CharField(
         label="Phone Number:",
         widget=forms.TextInput(
@@ -61,7 +58,6 @@ class OrderDetailsForm(forms.ModelForm):
                 'placeholder': "Please add a contact number..."
                 })
         )
-    
     address_line1 = forms.CharField(
         label="Address Line 1:",
         widget=forms.TextInput(
@@ -69,7 +65,6 @@ class OrderDetailsForm(forms.ModelForm):
                 'placeholder': "Please enter the address..."
                 })
         )
-    
     address_line2 = forms.CharField(
         label="Address Line 2:",
         widget=forms.TextInput(
@@ -77,7 +72,6 @@ class OrderDetailsForm(forms.ModelForm):
                 'placeholder': "Please enter the address..."
                 })
         )
-    
     town_or_city = forms.CharField(
         label="Town or City:",
         widget=forms.TextInput(
@@ -85,7 +79,6 @@ class OrderDetailsForm(forms.ModelForm):
                 'placeholder': "Please enter the town or city..."
                 })
         )
-    
     postcode = forms.CharField(
         label="Postcode:",
         required=False,
@@ -94,7 +87,6 @@ class OrderDetailsForm(forms.ModelForm):
                 'placeholder': "Please enter a postcode..."
                 })
         )
-    
     county_or_province_or_state = forms.CharField(
         label="County, Province or State:",
         widget=forms.TextInput(
@@ -102,7 +94,6 @@ class OrderDetailsForm(forms.ModelForm):
                 'placeholder': "Please enter a county, province or state..."
                 })
         )
-        
     country = forms.CharField(
         label="Country:",
         widget=forms.TextInput(

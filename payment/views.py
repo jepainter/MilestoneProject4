@@ -19,19 +19,19 @@ def payment(request):
         order_form = OrderDetailsForm(request.POST)
         payment_form = PaymentDetailsForm(request.POST)
         owner_id = request.user.id
-        print("Owner Id:" + str(owner_id))
         
+        # Capture order form details
         if order_form.is_valid() and payment_form.is_valid():
             order = order_form.save(commit=False)
             order.date = timezone.now()
             order.save()
             
+            # Add cart items as line items in order
             cart = request.session.get("cart", {})
             total = 0
             for id, quantity in cart.items():
                 artifact = get_object_or_404(Artifact, pk=id)
                 total += quantity * artifact.purchase_price
-                
                 order_line_item = OrderLineItem(
                     order = order,
                     artifact = artifact,
@@ -42,9 +42,10 @@ def payment(request):
                     )
                 order_line_item.save()
             
+            # Add bid cart items as line items in order
             bid_cart = request.session.get("bid_cart", {})
             for id, bid_id in bid_cart.items():
-                bid = BidLineItem.objects.get(pk=bid_id)    
+                bid = get_object_or_404(BidLineItem, pk=bid_id)    
                 total += bid.bid_quantity * bid.bid_amount
                 order_line_item = OrderLineItem(
                     order = order,
@@ -56,6 +57,7 @@ def payment(request):
                     )
                 order_line_item.save()
             
+            # Execute the charge to a card
             try:
                 customer = stripe.Charge.create(
                     amount = int(total * 100),
@@ -66,20 +68,18 @@ def payment(request):
             except stripe.error.CardError:
                 messages.error(request, "Your card was declined.")
             
+            # Successful payment processes and adjusts quantity of artifacts
             if customer.paid:
                 messages.success(request, "You have successfully paid.")
-                
                 cart = request.session.get("cart", {})
                 for id, quantity in cart.items():
                     artifact = get_object_or_404(Artifact, pk=id)
                     artifact.quantity -= quantity
                     artifact.save()
-                    
                     if artifact.quantity == 0:
                         prohibit_further_bidding(request, id=artifact.id)
                     else:
                         adjust_bidding_quantity(request, id=artifact.id)
-                
                 bid_cart = request.session.get("bid_cart", {})
                 for id, bid_id in bid_cart.items():
                     bid = get_object_or_404(BidLineItem, pk=bid_id)
@@ -87,7 +87,6 @@ def payment(request):
                     bid.bid_event.artifact.save()
                     bid.bid_paid = True
                     bid.save()
-                
                 request.session["cart"] = {}
                 request.session["bid_cart"] = {}
                 
