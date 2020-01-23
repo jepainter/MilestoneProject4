@@ -3,7 +3,9 @@ from artifacts.models import Artifact
 
 # Models for history and events related to an artifact
 class History(models.Model):
-    
+    """
+    Model for history associated with specific artifact
+    """
     artifact = models.ForeignKey(
         Artifact,
         on_delete=models.CASCADE,
@@ -17,7 +19,9 @@ class History(models.Model):
 
 
 class HistoryEvent(models.Model):
-    
+    """
+    Model for event within history of artifact
+    """
     ERA_CHOICES = [
         ("Gregorian", (
                 ("BC","BC"),
@@ -35,7 +39,6 @@ class HistoryEvent(models.Model):
         ),
         ("Unassigned","Unassigned"),
         ]
-    
     history_id = models.ForeignKey(
         History,
         on_delete=models.CASCADE,

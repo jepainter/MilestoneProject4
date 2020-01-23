@@ -6,7 +6,6 @@ class HistoryEventForm(forms.ModelForm):
     """
     Form to capture detail regarding an event in history of artifact
     """
-    
     event_year = forms.IntegerField(
         required=True,
         min_value=0,
@@ -24,7 +23,6 @@ class HistoryEventForm(forms.ModelForm):
                 'placeholder': 'Describe what happened...'
                 })
         )
-    
     field_order = ['event_year', 'event_era', 'event_description']
     
     class Meta:
