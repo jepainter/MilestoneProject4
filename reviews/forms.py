@@ -5,7 +5,6 @@ class ReviewForm(forms.ModelForm):
     """
     Form to capture review for a purchased artifact
     """
-    
     review_owner_name = forms.CharField(
         required=True,
         label="Name:",

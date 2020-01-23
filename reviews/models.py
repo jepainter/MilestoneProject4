@@ -3,7 +3,9 @@ from artifacts.models import Artifact
 
 # Models for reviews of items purchased by a user
 class Review(models.Model):
-    
+    """
+    Review instance for a specific artifact
+    """
     artifact = models.ForeignKey(
         Artifact,
         on_delete=models.CASCADE,
@@ -17,7 +19,10 @@ class Review(models.Model):
 
 
 class ReviewLineItem(models.Model):
-    
+    """
+    Review line for multiple reviews where more than one artifact
+    is purchased by different users
+    """
     review_id = models.ForeignKey(
         Review,
         on_delete=models.CASCADE,
