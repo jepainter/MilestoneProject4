@@ -5,6 +5,16 @@ The deployed website can be accessed from here (Heroku): [Artifact Hunters](http
 
 Travis Continuous Integration Testing: [![Build Status](https://travis-ci.org/jepainter/MilestoneProject4.svg?branch=master)](https://travis-ci.org/jepainter/MilestoneProject4)
 
+## Temporary note for the assessor (this section will be removed in future):
+
+- The website has various user types that have different priviledges in terms of actions they can take.  For testing of the super user / administrative account (to populate and change details in the admin panel) please use the following log in information:
+    - Username:guestadmin
+    - Email: guestadmin@example.com
+    - Password: qazwsxedc1234
+- The information above is made available to the assessor to demonstrate the full functionality of the site, and will be changed once the assessment has been completed.
+- Other account types (regular user) can be assessed by registering a new account.
+- Visitor accounts need no registrations, and will demonstrate limited functionality of the site in line with previleges.
+
 ## Goal of the website
 
 The website created is a responsive and interactive auction and commerce website giving the user the opportunity to view artifacts on sale, place and adjust bids, outright purchase artifacts, compile a review for an artifact that is owned by them, as well as contribute to the history of an artifact that is owned by them. The site also supports the processing of successful bid or purchases for payment and recording the order information. 
@@ -39,9 +49,9 @@ This website provides the relevant functionality to satisfy the requirements, in
 
 ### Wireframes:
 Wireframes for the initial development of the site and database structure can be found here:
-- [Mobile](#)
-- [Desktop](#)
-- [Database](#)
+- [Mobile](https://github.com/jepainter/MilestoneProject4/blob/master/development/Milestone%20Project%204%20-%20Mobile%20Design.pdf)
+- [Desktop](https://github.com/jepainter/MilestoneProject4/blob/master/development/Milestone%20Project%204%20-%20Desktop%20Design.pdf)
+- [Database](https://github.com/jepainter/MilestoneProject4/blob/master/development/Milestone%20Project%204%20-%20Database%20Model%20Design.pdf)
 
 ### Design considerations:
 It was decided to style the website with a simple and warm feel:
@@ -65,7 +75,7 @@ This site is limited to the use of HMTL, CSS, JavaScript, Python, Django and Pos
 - Feature 5 - My Bids: Ability to to manage all bids from a central location, and process if successful(pay and archive) or unsuccessful (archive).
 - Feature 6 - Purchase: Ability to outright purchase an artifact which is stored in the cart.
 - Feature 7 - Payment: Ability to fill in details regarding a artifact in the cart (either outright purchase or successful bid), in order to close sale.
-- Feature 8 - Add Review: Ability to add review for a specific artifact, if logged into the site and owner of the artifact.
+- Feature 8 - Add Review: Ability to add review for a specific artifact, if logged into the site and owner of the artifact (one time only per artifact per user).
 - Feature 9 - Add History: Ability to add hisotry events for an artifact, if logged into the site and owner of the artifact. Superuser will be able to add history events for the artifact as well.
 - Feature 10 - Register User: Ability to register as a new user for increased functionality (only if logged in).
 - Feature 11 - Log In: Ability to log in as user, for increased functionality.
@@ -143,13 +153,13 @@ The following languages, frameworks, libraries, IDE, repositories and tools were
 Testing for this site was performed as follows:
 
 ### Code Validation:
-The index.html file was not passed through the W3C HTML Validation site, due to the use of the Flask Framwork, many errors and warnings raised.
+The htmls file was not passed through the W3C HTML Validation site, due to the use of the Dajngo Template Framwork, many errors and warnings raised.
 The style.css file was tested using the W3C CSS Validation site, with no errors reported.
 The style.css file was run through the Autoprefixer CSS Online tool.
 
 The site was tested on Google Chrome (desktop and mobile through dev tools), Opera (desktop only), Edge (desktop only) and Safari (mobile only iPhone6) for functionality.  Verified working well.
 
-This site was also tested manually in line with the user stories and general functionality.  Testing is detailed in the testing matrix - [Testing Matrix](#).
+This site was also tested manually in line with the user stories and general functionality.  Testing is detailed in the testing matrix - [Testing Matrix](https://github.com/jepainter/MilestoneProject4/blob/master/development/Milestone%20Project%204%20-%20Testing%20Matrix.pdf).
 
 ## Deployment
 
