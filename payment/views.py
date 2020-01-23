@@ -71,6 +71,8 @@ def payment(request):
             # Successful payment processes and adjusts quantity of artifacts
             if customer.paid:
                 messages.success(request, "You have successfully paid.")
+                
+                # Adjust or prohibit further purchases/bidding if no items
                 cart = request.session.get("cart", {})
                 for id, quantity in cart.items():
                     artifact = get_object_or_404(Artifact, pk=id)
@@ -87,6 +89,8 @@ def payment(request):
                     bid.bid_event.artifact.save()
                     bid.bid_paid = True
                     bid.save()
+                
+                # Clearing of carts
                 request.session["cart"] = {}
                 request.session["bid_cart"] = {}
                 
