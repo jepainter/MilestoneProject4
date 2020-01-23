@@ -11,6 +11,7 @@ Travis Continuous Integration Testing: [![Build Status](https://travis-ci.org/je
     - Username:guestadmin
     - Email: guestadmin@example.com
     - Password: qazwsxedc1234
+- From the admin panel the assessor will be able to set deadline dates for bidding, in order to test bid closures.  The database have been prepolutated with bid deadlines, however the assessor may need to change these in order to test full functioning of the site.
 - The information above is made available to the assessor to demonstrate the full functionality of the site, and will be changed once the assessment has been completed.
 - Other account types (regular user) can be assessed by registering a new account.
 - Visitor accounts need no registrations, and will demonstrate limited functionality of the site in line with previleges.
@@ -18,6 +19,8 @@ Travis Continuous Integration Testing: [![Build Status](https://travis-ci.org/je
 ## Goal of the website
 
 The website created is a responsive and interactive auction and commerce website giving the user the opportunity to view artifacts on sale, place and adjust bids, outright purchase artifacts, compile a review for an artifact that is owned by them, as well as contribute to the history of an artifact that is owned by them. The site also supports the processing of successful bid or purchases for payment and recording the order information. 
+
+The bidding functionality works on a blind bidding basis, i.e. bidders are not able to view each others bids and will not know if their bid is the highest until after the bid deadline.
 
 The website in predominatentely managed by the site owner through the admin panel as the superuser (CRUD of artifacts, categories, bid_events).
 
