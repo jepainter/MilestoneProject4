@@ -7,7 +7,6 @@ class BidEvent(models.Model):
     """
     Model for general bidding information assicated to a specific artifact
     """
-    
     artifact = models.ForeignKey(Artifact, on_delete=models.CASCADE, null=False)
     artifact_purchased = models.BooleanField(null=False, default=False)
     bid_event_deadline = models.DateTimeField(null=True)
@@ -24,7 +23,6 @@ class BidLineItem(models.Model):
     """
     Model for specific bid placed by user on specific artifact
     """
-    
     bid_event = models.ForeignKey(
         BidEvent, on_delete=models.CASCADE, null=False)
     bid_amount = models.DecimalField(

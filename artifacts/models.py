@@ -3,7 +3,9 @@ from categories.models import Category
 
 # Model for artifact to be listed in database
 class Artifact(models.Model):
-    
+    """
+    Model for artifact
+    """
     name = models.CharField(max_length=100, default="")
     category = models.ForeignKey(
         Category,
