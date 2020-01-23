@@ -1,0 +1,252 @@
+/* prefixed by https://autoprefixer.github.io (PostCSS: v7.0.26, autoprefixer: v9.7.3) */
+
+/* Background styling */
+body {
+    min-height: 100vh;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+body:after {
+    content: "";
+    position: fixed; /* stretch a fixed position to the whole screen */
+    top: 0;
+    height: 100vh; /* fix for mobile browser address bar appearing disappearing */
+    left: 0;
+    right: 0;
+    z-index: -2; /* needed to keep in the background */
+    background-color: #f3dfbb;
+    background: url("../background/sand-background-min.jpg") center center;
+    background-size: cover; 
+}
+
+/* Color schemes */
+.bg-grey {
+    background-color: #4e4e4e;
+}
+
+.bg-light-grey {
+    background-color: #c1c1c1;
+}
+
+/* General styling */
+.btn {
+    font-size: 15px;
+}
+
+.btn-margin {
+    margin: 10px 0px 0px 0px;
+}
+
+.box-shadow {
+    -webkit-box-shadow: 5px 5px 19px -2px #000000;
+            box-shadow: 5px 5px 19px -2px #000000;
+    -webkit-transition-timing-function: ease-in-out;
+         -o-transition-timing-function: ease-in-out;
+            transition-timing-function: ease-in-out;
+    -webkit-transition-duration: 0.3s;
+         -o-transition-duration: 0.3s;
+            transition-duration: 0.3s;
+}
+
+.box-shadow:hover {
+    -webkit-box-shadow: 10px 10px 19px -2px #000000;
+            box-shadow: 10px 10px 19px -2px #000000;
+}
+
+.padding-10 {
+    padding: 10px;
+}
+
+.padding-sm-screen {
+    padding-top: 10px;
+}
+
+.page-heading-padding {
+    padding-top: 0px;
+    padding-left: 10px;
+    color: #b51111;
+    font-weight: 500;
+    margin: 0px;
+}
+
+.page-heading-img {
+    height: 100px;
+    -o-object-fit: contain;
+       object-fit: contain;
+    padding: 0px;
+}
+
+/* Navbar styling */
+.navbar .nav-link {
+    font-size: 15px; 
+}
+
+/* Jumbotron styling */
+.jumbotron {
+    margin-top: 32px;
+}
+
+.jumbotron-heading {
+    padding-top: 30px;
+}
+
+.carousel-image {
+    height: 150px;
+}
+
+/* History bar styling */
+.history-spacing {
+    padding: 0px 0px 0px 15px;
+}
+
+.history-date-item {
+    padding: 40px 10px 0px 20px;
+    border-left: 3px solid #831f05;
+    position: relative;
+}
+
+.history-date-item p {
+    padding-left: 20px;
+    padding-bottom: 20px;
+    margin: 0;
+}
+
+.history-date-item:before {
+    content: attr(data-dates);
+    position: absolute;
+    display: block;
+    left: 20px;
+    top: 10px;
+    font-weight: 500;
+    font-size: 17px;
+    padding: 0;
+    margin: 0;
+}
+
+.history-date-item:after {
+    height: 14px;
+    width: 14px;
+    border-radius: 50%;
+    background-color: #395812;
+    position: absolute;
+    display: block;
+    left: -8px;
+    top: 15px;
+    content: "";
+}
+
+/* Card styling */
+.card-padding {
+    padding: 10px 10px !important;
+}
+
+.card-padding-left {
+    padding-left: 0px;
+}
+
+.card-padding-top-bottom {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.card-link {
+    text-decoration: none;
+    color: #3E3F3A;
+    -webkit-transition-timing-function: ease-in-out;
+         -o-transition-timing-function: ease-in-out;
+            transition-timing-function: ease-in-out;
+    -webkit-transition-duration: 0.5s;
+         -o-transition-duration: 0.5s;
+            transition-duration: 0.5s;
+}
+
+.card-link:hover {
+    text-decoration: none;
+    color: #d80b0b;
+}
+
+.card-img-top {
+    height: 150px;
+    -o-object-fit: contain;
+       object-fit: contain;
+    padding: 10px;
+}
+
+.card-img-small {
+    height: 150px;
+    -o-object-fit: contain;
+       object-fit: contain;
+    padding: 10px;
+}
+
+.card-title {
+    padding-top: 20px;
+}
+
+
+/* Footer styling */
+.footer-position {
+    margin-top: auto !important;
+}
+
+.footer-padding-top {
+    padding-top: 10px;
+}
+
+.footer-heading {
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.footer-link {
+    font-size: 24px;
+    color: #8e8c84;
+    padding: 0px 10px 0px 10px;
+    -webkit-transition-timing-function: ease-in-out;
+         -o-transition-timing-function: ease-in-out;
+            transition-timing-function: ease-in-out;
+    -webkit-transition-duration: 0.3s;
+         -o-transition-duration: 0.3s;
+            transition-duration: 0.3s;
+}
+
+/* Media queries */
+@media (min-width:768px) {
+    
+    .card-padding-left {
+        padding-left: 10px !important;
+    }
+    
+    .card-img-top {
+        height: 200px;
+        -o-object-fit: contain;
+           object-fit: contain;
+        padding: 10px;
+    }
+    
+    .padding-sm-screen {
+        padding-top: 0px;
+    }
+}
+
+@media (min-width:922px) {
+    
+    .jumbotron {
+        margin-top: 100px;
+    }
+    
+    .history-spacing {
+        padding: 10px 0px 10px 30px;
+    }
+    
+    .footer-link:hover {
+        font-size: 24px;
+        color: #b51111;
+    }
+}
