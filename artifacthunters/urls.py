@@ -21,7 +21,6 @@ from accounts.views import index
 from accounts import urls as accounts_urls
 from artifacts.views import all_artifacts
 from artifacts import urls as artifacts_urls
-from bids.views import view_bids
 from bids import urls as bids_urls
 from cart import urls as cart_urls
 from categories.views import all_categories

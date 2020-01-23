@@ -8,27 +8,21 @@ from artifacts.models import Artifact
 from bids.models import BidEvent, BidLineItem
     
 # Views for managing the bidding
-def view_bids(request, id):
+@login_required
+def view_user_bids(request):
     """
-    Get data for bids on a specific artifact. Look up a bid event
-    associated with the artifact id. Further look up of associated
-    bids with the bid event id.
+    Function to view bids of logged in user
     """
+    user_bids = BidLineItem.objects.filter(bid_user=request.user.id)
+    if user_bids:
+        bidder = user_bids[0].bid_user
+    else:
+        bidder = User.objects.get(id=request.user.id)
     
-    try:
-        bid_event = BidEvent.objects.get(artifact=id)
-        artifact = bid_event.artifact
-        bids = BidLineItem.objects.filter(bid_event=bid_event)
-    except:
-        bid_event = ""
-        bids = ""
-        artifact = Artifact.objects.get(id=id)
-    
-    return render(request, "bids.html", {
-        "artifact": artifact,
-        "bid_event": bid_event,
-        "bids": bids,
-        "datetime": timezone.now(),
+    return render(request, "mybids.html", {
+        "user": bidder,
+        "bids": user_bids,
+        "datetime": timezone.now()
         })
 
 
@@ -39,15 +33,12 @@ def add_bid(request, id):
     to add bid to. Check for if user already have a bid and update
     if so, else create new
     """
-    
     bid_time = timezone.now()
-    
     if request.method == "POST":
         try:
             bid_event = BidEvent.objects.get(artifact_id=id)
             bid_quantity = int(request.POST.get("bid_quantity"))
             bid_amount = Decimal(request.POST.get("bid_amount"))
-        
             if bid_time < bid_event.bid_event_deadline:
                 if bid_amount < bid_event.artifact.reserve_price:
                     messages.error(
@@ -72,16 +63,15 @@ def add_bid(request, id):
                     request,
                     "Sorry, your bid was submitted after the deadline."
                     )
-            
+            # Call helper function to determine highest bid        
             set_highest_bid(bid_event.id)
-        
         except:
             messages.error(
                 request,
                 "Sorry, no bid event exists for this artifact."
                 )
-    
-    return redirect("view_bids", id=id)
+
+    return redirect("view_artifact", id=id)
 
 
 @login_required
@@ -92,15 +82,12 @@ def adjust_bid(request, id):
     Checks whether bid below reserve price or below previous bid, 
     prevents change to bid.
     """
-    
     bid_time = timezone.now()
-    
     if request.method =="POST":
         try:
             bid_line_item = BidLineItem.objects.get(id=id)
             new_quantity = int(request.POST.get("adjust_quantity"))
             new_amount = Decimal(request.POST.get("adjust_amount"))
-            
             if bid_time < bid_line_item.bid_event.bid_event_deadline:
                 if new_quantity == 0 or new_amount == 0:
                     bid_line_item.delete()
@@ -108,7 +95,6 @@ def adjust_bid(request, id):
                         request,
                         "Your bid have been removed."
                         )
-                        
                 elif new_amount < bid_line_item.bid_event.artifact.reserve_price:
                     messages.error(
                         request,
@@ -123,15 +109,13 @@ def adjust_bid(request, id):
                         request,
                         "Your bid has been adjusted."
                         )
-            
             else:
                 messages.error(
                     request,
                     "Sorry, your bid was submitted after the deadline."
                     )
-            
+            # Call to helper function to set the highest bid
             set_highest_bid(bid_line_item.bid_event.id)
-        
         except:
             messages.error(
                 request,
@@ -144,11 +128,10 @@ def adjust_bid(request, id):
 @login_required
 def remove_bid(request, id):
     """
-    Remove a bid placed by the user
+    Remove a bid placed by the user, by checking if within the deadline,
+    else prevent removal.
     """
-    
     bid_time = timezone.now()
-    
     try:
         bid_line_item = BidLineItem.objects.get(id=id)
         if bid_time < bid_line_item.bid_event.bid_event_deadline:
@@ -162,7 +145,9 @@ def remove_bid(request, id):
                 request,
                 "Sorry, you cannot remove a bid after the bidding is closed."
                 )
+        # Call to helper function to set the highest bid
         set_highest_bid(bid_line_item.bid_event.id)
+        
         return redirect("view_user_bids")
         
     except:
@@ -175,31 +160,11 @@ def remove_bid(request, id):
 
 
 @login_required
-def view_user_bids(request):
-    """
-    Function to view bids of logged in user
-    """
-    
-    user_bids = BidLineItem.objects.filter(bid_user=request.user.id)
-    if user_bids:
-        bidder = user_bids[0].bid_user
-    else:
-        bidder = User.objects.get(id=request.user.id)
-    
-    return render(request, "mybids.html", {
-        "user": bidder,
-        "bids": user_bids,
-        "datetime": timezone.now()
-        })
-
-
-@login_required
 def archive_bid(request, id):
     """
     Function to archive bids from MyBids, to prevent display.
     Info kept in Database for record purposes
     """
-    
     try:
         bid = BidLineItem.objects.get(id=id)
         bid.bid_archived = True
@@ -208,7 +173,6 @@ def archive_bid(request, id):
             request,
             "Your old bid have been archived."
             )
-    
     except:
         messages.error(
             request,
@@ -224,19 +188,15 @@ def set_highest_bid(id):
     if a new bid or adjusted bid is higher or 
     if existing highest bid is deleted
     """
-    
     try:
         existing_highest_bid = BidLineItem.objects.filter(
             bid_event=id).get(bid_highest=True)
         existing_highest_bid.bid_highest = False 
         existing_highest_bid.save()
-    
     except:
         pass
-    
     new_highest_bid = BidLineItem.objects.filter(
         bid_event=id).order_by('-bid_amount').first()
-    
     if new_highest_bid != None:
         if new_highest_bid.bid_event.artifact.quantity == 0:
             pass
@@ -248,7 +208,11 @@ def set_highest_bid(id):
 
 
 def prohibit_further_bidding(request, id):
-    
+    """
+    Function to prevent further bidding if items are purchased outright
+    and quantity is not available.  This will mark all active bids as not
+    being the highest bid.
+    """
     try:
         existing_highest_bid = BidLineItem.objects.filter(
             bid_event__artifact=id).get(bid_highest=True)
@@ -268,9 +232,11 @@ def prohibit_further_bidding(request, id):
 
 
 def adjust_bidding_quantity(request, id):
-    
+    """
+    Function to adjust bidding quantities for users, if stock levels
+    are less than bid quantity.
+    """
     bids = BidLineItem.objects.filter(bid_event__artifact=id)
-    
     for bid in bids:
         if bid.bid_quantity > bid.bid_event.artifact.quantity:
             bid.bid_note = "Bid quantity adjusted down due to stock availability."
