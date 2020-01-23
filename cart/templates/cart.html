@@ -31,7 +31,7 @@
                                 <img class="card-img-top bg-grey" src="{{ MEDIA_URL }}{{ item.artifact.image }}" alt="Image for {{ item.artifact.name }}">
                                 <li class="list-group-item bg-light">
                                     <h5 class="card-title">{{ item.artifact.name }}</h5>
-                                    <p class="card-text">Purchase Price: {{ item.artifact.purchase_price }}</p>
+                                    <p class="card-text">Purchase Price: EUR {{ item.artifact.purchase_price }}</p>
                                 </li>
                             </a>
                             <li class="list-group-item bg-light">
@@ -69,7 +69,7 @@
                                     <img class="card-img-top bg-grey" src="{{ MEDIA_URL }}{{ item.artifact.image }}" alt="Image for {{ item.artifact.name }}">
                                     <li class="list-group-item bg-light">
                                         <h5 class="card-title">{{ item.artifact.name }}</h5>
-                                        <p class="card-text">Bid Amount: {{ item.bid_amount }}</p>
+                                        <p class="card-text">Bid Amount: EUR {{ item.bid_amount }}</p>
                                         <p class="card-text">Quantity: {{ item.quantity }}</p>
                                     </li>
                                 </a>
@@ -97,7 +97,7 @@
                 </li>
                 <li class="list-group-item bg-light">
                     <h5 class="card-title">Total:</h5>
-                    <h5>{{ total }}</h5>
+                    <h5>EUR {{ total }}</h5>
                 </li>
                 <li class="list-group-item bg-light text-center">
                     <a class="btn btn-success btn-margin box-shadow" href="{% url 'payment' %}" role="button">Pay Now</a>

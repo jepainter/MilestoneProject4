@@ -31,7 +31,7 @@
                                     <img class="card-img-top bg-grey" src="{{ MEDIA_URL }}{{ bid.bid_event.artifact.image }}" alt="Image for {{ bid.bid_event.artifact.name }}">
                                     <li class="list-group-item bg-light">
                                         <h4>{{ bid.bid_event.artifact.name }}</h4>
-                                        <p>Current Bid Amount: {{ bid.bid_amount }}</p>
+                                        <p>Current Bid Amount: EUR {{ bid.bid_amount }}</p>
                                         <p>Current Bid Quantity: {{ bid.bid_quantity }}</p>
                                         {% if bid.bid_note != "No note" %}
                                             <p>Note: {{ bid.bid_note }}</p>
@@ -41,7 +41,12 @@
                                 <li class="list-group-item bg-light">
                                     <form role="form" action="{% url 'adjust_bid' bid.id %}" method="POST">
                                         <label for="adjust_amount">Change Amount:</label>
-                                        <input name="adjust_amount" type="number" min="{{ bid.bid_event.artifact.reserve_price }}" step="0.01" class="form-control" value="{{ bid.bid_amount }}" placeholder="Adjust amount..." required>
+                                        <div class="input-group mb-1">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">EUR</span>
+                                            </div>
+                                            <input name="adjust_amount" type="number" min="{{ bid.bid_event.artifact.reserve_price }}" step="0.01" class="form-control" value="{{ bid.bid_amount }}" placeholder="Adjust amount..." required>
+                                        </div>
                                         <label for="adjust_quantity">Change Quantity:</label>
                                         <input name="adjust_quantity" type="number" min="1" max="{{ bid.bid_event.artifact.quantity }}" class="form-control" value="{{ bid.bid_quantity }}" placeholder="Adjust quantity" required>
                                         {% csrf_token %}
@@ -84,7 +89,7 @@
                                     <li class="list-group-item bg-light">
                                         <h4>{{ bid.bid_event.artifact.name }}</h4>
                                         <p>Highest Bid: {{ bid.bid_highest }}</p>
-                                        <p>Bid Amount: {{ bid.bid_amount }}</p>
+                                        <p>Bid Amount: EUR {{ bid.bid_amount }}</p>
                                         <p>Bid Quantity: {{ bid.bid_quantity }}</p>
                                         {% if bid.bid_note != "No note" %}
                                             <p>Note: {{ bid.bid_note }}</p>
@@ -131,7 +136,7 @@
                                     <img class="card-img-top bg-grey" src="{{ MEDIA_URL }}{{ bid.bid_event.artifact.image }}" alt="Image for {{ bid.bid_event.artifact.name }}">
                                     <li class="list-group-item bg-light">
                                         <h4>{{ bid.bid_event.artifact.name }}</h4>
-                                        <p>Bid Amount: {{ bid.bid_amount }}</p>
+                                        <p>Bid Amount: EUR {{ bid.bid_amount }}</p>
                                         <p>Bid Quantity: {{ bid.bid_quantity }}</p>
                                         {% if bid.bid_note != "No note" %}
                                             <p>Note: {{ bid.bid_note }}</p>
@@ -174,7 +179,7 @@
                                     <img class="card-img-top bg-grey" src="{{ MEDIA_URL }}{{ bid.bid_event.artifact.image }}" alt="Image for {{ bid.bid_event.artifact.name }}">
                                     <li class="list-group-item bg-light">
                                         <h4>{{ bid.bid_event.artifact.name }}</h4>
-                                        <p>Bid Amount: {{ bid.bid_amount }}</p>
+                                        <p>Bid Amount: EUR {{ bid.bid_amount }}</p>
                                         <p>Bid Quantity: {{ bid.bid_quantity }}</p>
                                     </li>
                                 </a>

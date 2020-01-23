@@ -41,7 +41,7 @@
                             <img class="card-img-small bg-grey" src="{{ MEDIA_URL }}{{ item.artifact.image }}" alt="Image for {{ item.artifact.name }}">
                             <li class="list-group-item bg-light">
                                 <h5 class="card-title">{{ item.artifact.name }}</h5>
-                                <p class="card-text">Purchase Price: {{ item.artifact.purchase_price }}</p>
+                                <p class="card-text">Purchase Price: EUR {{ item.artifact.purchase_price }}</p>
                                 <p class="card-text">Quantity: {{ item.quantity }}</p>
                             </li>
                         </ul>
@@ -57,7 +57,7 @@
                             <img class="card-img-small bg-grey" src="{{ MEDIA_URL }}{{ item.artifact.image }}" alt="Image for {{ item.artifact.name }}">
                             <li class="list-group-item bg-light">
                                 <h5 class="card-title">{{ item.artifact.name }}</h5>
-                                <p class="card-text">Bid Amount: {{ item.bid_amount }}</p>
+                                <p class="card-text">Bid Amount: EUR {{ item.bid_amount }}</p>
                                 <p class="card-text">Quantity: {{ item.quantity }}</p>
                             </li>
                         </ul>
@@ -79,7 +79,7 @@
                     <h4>Your Total</h4>
                 </li>
                 <li class="list-group-item bg-light">
-                    <h5 class="card-title">Total: {{ total }}</h5>
+                    <h5 class="card-title">Total: EUR {{ total }}</h5>
                 </li>
             </ul>
         </div>

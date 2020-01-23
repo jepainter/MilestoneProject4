@@ -47,7 +47,12 @@
                                         <li class="list-group-item bg-light">
                                             <form role="form" action="{% url 'adjust_bid' bid_line_item.id %}" method="POST">
                                                 <label for="adjust_amount">Change Amount:</label>
-                                                <input name="adjust_amount" type="number" min="{{ artifact.reserve_price }}" step="0.01" class="form-control" value="{{ bid_line_item.bid_amount }}" placeholder="Adjust amount" required>
+                                                <div class="input-group mb-1">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">EUR</span>
+                                                    </div>
+                                                    <input name="adjust_amount" type="number" min="{{ artifact.reserve_price }}" step="0.01" class="form-control" value="{{ bid_line_item.bid_amount }}" placeholder="Adjust amount" required>
+                                                </div>
                                                 <label for="adjust_quantity">Change Quantity:</label>
                                                 <input name="adjust_quantity" type="number" min="1" max="{{ bid_line_item.bid_event.artifact.quantity }}" class="form-control" value="{{ bid_line_item.bid_quantity }}" placeholder="Adjust quantity" required>
                                                 {% csrf_token %}
@@ -64,7 +69,7 @@
                                             {% if artifact_in_cart %}
                                             <li class="list-group-item bg-light">Bidding not possible, item in cart</li>
                                             <li class="list-group-item bg-light">
-                                                <form action="{% url 'adjust_cart' artifact.id %}" method="POST">
+                                                <form role="form" action="{% url 'adjust_cart' artifact.id %}" method="POST">
                                                     {% csrf_token %}
                                                     <label for="quantity">Change Quantity:</label>
                                                     <input name="quantity" type="number" min="1" max="{{ artifact.quantity }}" class="form-control" value="{{ artifact_in_cart.artifact_quantity }}" placeholder="How many do you want..." required>
@@ -79,12 +84,17 @@
                                             {% else %}
                                             <li class="list-group-item bg-light">
                                                 <h6>Place a bid:</h6>
-                                                <form action="{% url 'add_bid' artifact.id %}" method="POST">
+                                                <form role="form" action="{% url 'add_bid' artifact.id %}" method="POST">
                                                     {% csrf_token %}
+                                                    <label for="bid_amount">Choose Amount:</label>
+                                                    <div class="input-group mb-1">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">EUR</span>
+                                                        </div>
+                                                        <input name="bid_amount" type="number" min="{{ artifact.reserve_price }}" step="0.01" class="form-control" placeholder="What do you want to bid..." required>
+                                                    </div>
                                                     <label for="bid_quantity">Choose Quantity:</label>
                                                     <input name="bid_quantity" type="number" min="1" max="{{ artifact.quantity }}" class="form-control" placeholder="How many do you want..." required>
-                                                    <label for="bid_amount">Choose Amount:</label>
-                                                    <input name="bid_amount" type="number" min="{{ artifact.reserve_price }}" step="0.01" class="form-control" placeholder="What do you want to bid..." required>
                                                     <span class="input-group-btn">
                                                         <button class="btn btn-success btn-margin box-shadow" type="submit">Place bid</button>
                                                     </span>
