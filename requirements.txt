@@ -18,7 +18,7 @@ mccabe==0.6.1
 parso==0.1.1
 pbr==5.4.3
 pexpect==4.7.0
-Pillow==6.2.1
+Pillow==8.3.2
 psycopg2-binary==2.8.4
 ptyprocess==0.6.0
 pyasn1==0.4.7
